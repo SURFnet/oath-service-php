@@ -1,0 +1,7 @@
+parameters:
+#    sur_fnet_oath.example.class: SURFnet\OATHBundle\Example
+
+services:
+#    sur_fnet_oath.example:
+#        class: %sur_fnet_oath.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

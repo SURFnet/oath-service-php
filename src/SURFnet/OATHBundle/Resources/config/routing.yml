@@ -1,0 +1,7 @@
+surfnet_oath_users:
+    type: rest
+    resource: SURFnet\OATHBundle\Controller\UsersController
+
+surfnet_oath_storage:
+    type: rest
+    resource: SURFnet\OATHBundle\Controller\StorageController
