@@ -17,3 +17,10 @@ parameters:
     debug_toolbar:          true
     debug_redirects:        false
     use_assetic_controller: true
+
+    surfnet_oath:
+        storage:
+            type: file
+            options:
+                file_path: /tmp/
+                file_prefix: oathservice

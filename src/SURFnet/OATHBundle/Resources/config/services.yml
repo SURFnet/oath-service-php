@@ -1,7 +1,6 @@
 parameters:
-#    sur_fnet_oath.example.class: SURFnet\OATHBundle\Example
+    surfnet_oath.storage.factory.class: SURFnet\OATHBundle\Services\Storage\Factory
 
 services:
-#    sur_fnet_oath.example:
-#        class: %sur_fnet_oath.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    surfnet_oath.storage.factory:
+        class: %surfnet_oath.storage.factory.class%

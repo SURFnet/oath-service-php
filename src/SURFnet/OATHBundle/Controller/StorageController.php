@@ -3,8 +3,8 @@
 namespace SURFnet\OATHBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Request;
 
 class StorageController extends FOSRestController
 {
@@ -17,6 +17,7 @@ class StorageController extends FOSRestController
      *  },
      *  statusCodes={
      *      200="Success, value is in the body",
+     *      400="Value is expired",
      *      404="Key not found",
      *      500="General error, something went wrong",
      *  },
@@ -25,7 +26,15 @@ class StorageController extends FOSRestController
      */
     public function getStorageAction($key)
     {
-        $view = $this->view(array(), 200);
+        $storage = $this->getStorage();
+        $responseCode = 200;
+        try {
+            $data = $storage->getValue($key);
+        } catch (\Exception $e) {
+            $data = array('error' => $e->getMessage());
+            $responseCode = $e->getCode() ?: 500;
+        }
+        $view = $this->view($data, $responseCode);
         return $this->handleView($view);
     }
 
@@ -37,7 +46,8 @@ class StorageController extends FOSRestController
      *    {"name"="key", "dataType"="string", "description"="The key that is used to identify the value"}
      *  },
      *  parameters={
-     *    {"name"="value", "dataType"="string", "required"=true, "description"="The value to store"}
+     *    {"name"="value", "dataType"="string", "required"=true, "description"="The value to store"},
+     *    {"name"="expire", "dataType"="integer", "required"=false, "description"="Number of seconds to expire the value, default 0 (unlimited)"}
      *  },
      *  statusCodes={
      *      200="Success",
@@ -49,7 +59,17 @@ class StorageController extends FOSRestController
      */
     public function putStorageAction($key)
     {
-        $view = $this->view(array(), 200);
+        $storage = $this->getStorage();
+        $request = $this->get('request_stack')->getCurrentRequest();
+
+        $responseCode = 200;
+        try {
+            $data = $storage->storeValue($key, $request->get('value'), (int)$request->get('expire', 0));
+        } catch (\Exception $e) {
+            $data = array('error' => $e->getMessage());
+            $responseCode = $e->getCode() ?: 500;
+        }
+        $view = $this->view($data, $responseCode);
         return $this->handleView($view);
     }
 
@@ -70,7 +90,27 @@ class StorageController extends FOSRestController
      */
     public function deleteStorageAction($key)
     {
-        $view = $this->view(array(), 200);
+        $storage = $this->getStorage();
+        $responseCode = 200;
+        try {
+            $data = $storage->deleteValue($key);
+        } catch (\Exception $e) {
+            $data = array('error' => $e->getMessage());
+            $responseCode = $e->getCode() ?: 500;
+        }
+        $view = $this->view($data, $responseCode);
         return $this->handleView($view);
+    }
+
+    /**
+     * Create the storage class using the storage factory and return the class
+     *
+     * @return mixed
+     */
+    protected function getStorage()
+    {
+        $storageFactory = $this->get('surfnet_oath.storage.factory');
+        $config = $this->container->getParameter('surfnet_oath');
+        return $storageFactory->createStorage($config['storage']['type'], $config['storage']['options']);
     }
 }
