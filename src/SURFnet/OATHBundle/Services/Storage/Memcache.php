@@ -2,6 +2,8 @@
 
 namespace SURFnet\OATHBundle\Services\Storage;
 
+use Symfony\Component\Config\Definition\Exception\Exception;
+
 class Memcache extends StorageAbstract
 {
     /**
@@ -77,11 +79,17 @@ class Memcache extends StorageAbstract
      * @param string $key
      *
      * @return \SURFnet\OATHBundle\Entity\Storage
+     *
+     * @throws \Exception
      */
     public function getValue($key)
     {
         $key = $this->_getKeyPrefix().$key;
-        return $this->returnStorage($key, $this->_memcache->get($key));
+        $value = $this->_memcache->get($key);
+        if ($value === false) {
+            throw new Exception('key_not_found', 404);
+        }
+        return $this->returnStorage($key, $value);
     }
 
     /**
