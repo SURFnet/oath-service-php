@@ -1,6 +1,6 @@
 parameters:
-    surfnet_oath.storage.factory.class: SURFnet\OATHBundle\Services\Storage\Factory
+    surfnet_oath.oath.factory.class: SURFnet\OATHBundle\Services\OATH\Factory
 
 services:
-    surfnet_oath.storage.factory:
-        class: %surfnet_oath.storage.factory.class%
+    surfnet_oath.oath.factory:
+        class: %surfnet_oath.oath.factory.class%

@@ -1,7 +1,7 @@
-surfnet_oath_users:
+surfnet_oath_secrets:
     type: rest
-    resource: SURFnet\OATHBundle\Controller\UsersController
+    resource: SURFnet\OATHBundle\Controller\SecretsController
 
-surfnet_oath_storage:
+surfnet_oath_oath:
     type: rest
-    resource: SURFnet\OATHBundle\Controller\StorageController
+    resource: SURFnet\OATHBundle\Controller\OathController
