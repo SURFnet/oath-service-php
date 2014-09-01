@@ -12,8 +12,11 @@ parameters:
     use_assetic_controller: true
 
     surfnet_oath:
-        storage:
-            type: file
+        userstorage:
+            type: pdo
             options:
-                file_path: /tmp/
-                file_prefix: oathservice
+                dsn: mysql:host=localhost;dbname=oathservice
+                username: root
+                password: root
+                table: secret
+                

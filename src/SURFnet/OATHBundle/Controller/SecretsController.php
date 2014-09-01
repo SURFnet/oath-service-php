@@ -24,7 +24,15 @@ class SecretsController extends FOSRestController
      */
     public function getSecretsAction($identifier)
     {
-        $view = $this->view(array(), 200);
+        $userStorage = $this->getUserStorage();
+        $responseCode = 200;
+        try {
+            $data = $userStorage->getSecret($identifier);
+        } catch (\Exception $e) {
+            $data = array('error' => $e->getMessage());
+            $responseCode = $e->getCode() ?: 500;
+        }
+        $view = $this->view($data, $responseCode);
         return $this->handleView($view);
     }
 
@@ -46,7 +54,16 @@ class SecretsController extends FOSRestController
      */
     public function postSecretsAction($identifier)
     {
-        $view = $this->view(array(), 200);
+        $request = $this->get('request_stack')->getCurrentRequest();
+        $userStorage = $this->getUserStorage();
+        $responseCode = 200;
+        try {
+            $data = $userStorage->saveSecret($identifier, $request->get('secret'));
+        } catch (\Exception $e) {
+            $data = array('error' => $e->getMessage());
+            $responseCode = $e->getCode() ?: 500;
+        }
+        $view = $this->view($data, $responseCode);
         return $this->handleView($view);
     }
 
@@ -66,7 +83,29 @@ class SecretsController extends FOSRestController
      */
     public function deleteSecretsAction($identifier)
     {
-        $view = $this->view(array(), 200);
+        $userStorage = $this->getUserStorage();
+        $responseCode = 200;
+        try {
+            $data = $userStorage->deleteSecret($identifier);
+        } catch (\Exception $e) {
+            $data = array('error' => $e->getMessage());
+            $responseCode = $e->getCode() ?: 500;
+        }
+        $view = $this->view($data, $responseCode);
         return $this->handleView($view);
+    }
+
+    /**
+     * Create the storage class using the storage factory and return the class
+     *
+     * @param string $type
+     *
+     * @return mixed
+     */
+    protected function getUserStorage()
+    {
+        $userStorageFactory = $this->get('surfnet_oath.userstorage.factory');
+        $config = $this->container->getParameter('surfnet_oath');
+        return $userStorageFactory->createUserStorage($config['userstorage']['type'], $config['userstorage']['options']);
     }
 }
