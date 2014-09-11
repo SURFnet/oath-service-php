@@ -2,11 +2,10 @@
 
 namespace SURFnet\OATHBundle\Controller;
 
-use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
-class SecretsController extends FOSRestController
+class SecretsController extends BaseController
 {
     /**
      * @ApiDoc(
@@ -17,6 +16,7 @@ class SecretsController extends FOSRestController
      *  },
      *  statusCodes={
      *      200="Success, secret is in the body",
+     *      401="Invalid consumer key",
      *      404="Identifier not found",
      *      500="General error, something went wrong",
      *  },
@@ -24,9 +24,10 @@ class SecretsController extends FOSRestController
      */
     public function getSecretsAction($identifier)
     {
-        $userStorage = $this->getUserStorage();
         $responseCode = 200;
         try {
+            $this->verifyConsumerKey();
+            $userStorage = $this->getUserStorage();
             $data = $userStorage->getSecret($identifier);
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
@@ -47,17 +48,19 @@ class SecretsController extends FOSRestController
      *    {"name"="secret", "dataType"="string", "required"=true, "description"="The user's secret"},
      *  },
      *  statusCodes={
-     *      200="Success",
+     *      204="Success, empty body",
+     *      401="Invalid consumer key",
      *      500="General error, something went wrong",
      *  },
      * )
      */
     public function postSecretsAction($identifier)
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
-        $userStorage = $this->getUserStorage();
         $responseCode = 200;
         try {
+            $this->verifyConsumerKey();
+            $request = $this->get('request_stack')->getCurrentRequest();
+            $userStorage = $this->getUserStorage();
             $data = $userStorage->saveSecret($identifier, $request->get('secret'));
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
@@ -76,6 +79,7 @@ class SecretsController extends FOSRestController
      *  },
      *  statusCodes={
      *      204="Secret is deleted",
+     *      401="Invalid consumer key",
      *      404="Identifier not found",
      *      500="General error, something went wrong",
      *  },
@@ -83,9 +87,10 @@ class SecretsController extends FOSRestController
      */
     public function deleteSecretsAction($identifier)
     {
-        $userStorage = $this->getUserStorage();
         $responseCode = 200;
         try {
+            $this->verifyConsumerKey();
+            $userStorage = $this->getUserStorage();
             $data = $userStorage->deleteSecret($identifier);
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
@@ -93,19 +98,5 @@ class SecretsController extends FOSRestController
         }
         $view = $this->view($data, $responseCode);
         return $this->handleView($view);
-    }
-
-    /**
-     * Create the storage class using the storage factory and return the class
-     *
-     * @param string $type
-     *
-     * @return mixed
-     */
-    protected function getUserStorage()
-    {
-        $userStorageFactory = $this->get('surfnet_oath.userstorage.factory');
-        $config = $this->container->getParameter('surfnet_oath');
-        return $userStorageFactory->createUserStorage($config['userstorage']['type'], $config['userstorage']['options']);
     }
 }

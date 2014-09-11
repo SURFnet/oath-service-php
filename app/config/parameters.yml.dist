@@ -19,4 +19,7 @@ parameters:
                 username: root
                 password: root
                 table: secret
-                
+        consumerKey: ThisKeyShouldBeSecret
+        oath:
+            ocra:
+                suite: OCRA-1:HOTP-SHA1-6:QH10-S

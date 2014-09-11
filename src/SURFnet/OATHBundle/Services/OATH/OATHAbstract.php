@@ -41,17 +41,20 @@ abstract class OATHAbstract
      *
      * @return string
      */
-    abstract public function generateChallenge();
+    public function generateChallenge()
+    {
+
+    }
 
     /**
      * Validate response using the challenge and optionally the userId and sessionKey
      *
      * @param string $response
      * @param string $challenge
-     * @param string $userId
+     * @param string $secret
      * @param string $sessionKey
      *
      * @return boolean
      */
-    abstract public function validateResponse($response, $challenge, $userId = null, $sessionKey = null);
+    abstract public function validateResponse($response, $challenge, $secret = null, $sessionKey = null);
 }
