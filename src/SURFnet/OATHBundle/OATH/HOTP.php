@@ -1,30 +1,5 @@
 <?php
-/**
- * This file is part of the tiqr project.
- * 
- * The tiqr project aims to provide an open implementation for 
- * authentication using mobile devices. It was initiated by 
- * SURFnet and developed by Egeniq.
- *
- * More information: http://www.tiqr.org
- *
- * @author Ivo Jansch <ivo@egeniq.com>
- * 
- * @package tiqr
- *
- * @license New BSD License - See LICENSE file for details.
- *
- * @copyright (C) 2010-2011 SURFnet BV
- */
 
-
-/**
- * Implementation of the OATH HOTP algorithm.
- * Currently superseded by the OCRA algorithm, but left in the codebase so future versions
- * could switch between OCRA and HOTP.
- * @author ivo
- *
- */
 class Tiqr_OATH_HOTP
 {
     /**

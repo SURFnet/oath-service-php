@@ -10,36 +10,6 @@ class SecretsController extends BaseController
     /**
      * @ApiDoc(
      *  section="Secrets",
-     *  description="Get the user secret, returns the secret",
-     *  requirements={
-     *    {"name"="identifier", "dataType"="string", "description"="The identifier for the secret"}
-     *  },
-     *  statusCodes={
-     *      200="Success, secret is in the body",
-     *      401="Invalid consumer key",
-     *      404="Identifier not found",
-     *      500="General error, something went wrong",
-     *  },
-     * )
-     */
-    public function getSecretsAction($identifier)
-    {
-        $responseCode = 200;
-        try {
-            $this->verifyConsumerKey();
-            $userStorage = $this->getUserStorage();
-            $data = $userStorage->getSecret($identifier);
-        } catch (\Exception $e) {
-            $data = array('error' => $e->getMessage());
-            $responseCode = $e->getCode() ?: 500;
-        }
-        $view = $this->view($data, $responseCode);
-        return $this->handleView($view);
-    }
-
-    /**
-     * @ApiDoc(
-     *  section="Secrets",
      *  description="Set or update user's secret",
      *  requirements={
      *    {"name"="identifier", "dataType"="string", "description"="The identifier for the secret"}
