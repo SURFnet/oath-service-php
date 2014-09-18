@@ -5,7 +5,7 @@ namespace SURFnet\OATHBundle\Services\OATH;
 use SURFnet\OATHBundle\Services\OATH\RandomGenerator;
 use SURFnet\OATHBundle\OATH\OCRA as OATH_OCRA;
 
-class OCRA extends OATHAbstract
+class OCRA extends OATHService
 {
     private $OCRASuite = NULL;
 
@@ -220,7 +220,7 @@ class OCRA extends OATHAbstract
     }
 
     /**
-     * Validate response using the challenge and the userId and sessionKey
+     * Validate response using the challenge, the secret and the sessionKey
      *
      * @param string $response
      * @param string $challenge
@@ -229,7 +229,7 @@ class OCRA extends OATHAbstract
      *
      * @return boolean
      */
-    public function validateResponse($response, $challenge, $secret = null, $sessionKey = null)
+    public function validateResponse($response, $challenge, $secret, $sessionKey)
     {
         $expected = OATH_OCRA::generateOCRA($this->OCRASuite, $secret, "", $challenge, "", $sessionKey, "");
         return $this->constEqual($expected, $response);

@@ -18,3 +18,8 @@ parameters:
         oath:
             ocra:
                 suite: OCRA-1:HOTP-SHA1-6:QH10-S
+            hotp:
+                length: 6
+            totp:
+                length: 6
+                window: 120 # in seconds

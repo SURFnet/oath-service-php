@@ -2,6 +2,16 @@
 
 namespace SURFnet\OATHBundle\Services\UserStorage;
 
+/**
+ * Class PDO storage
+ * Table structure (for mysql):
+ * CREATE TABLE `storage` (
+ *   `identifier` varchar(100) NOT NULL,
+ *   `secret` varchar(255) NOT NULL,
+ *   `counter` int(10) DEFAULT '0',
+ *   PRIMARY KEY (`identifier`)
+ * ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ */
 class PDO extends UserStorageAbstract
 {
     /**
@@ -50,6 +60,30 @@ class PDO extends UserStorageAbstract
     }
 
     /**
+     * Get the users secret and counter
+     *
+     * @param string $identifier
+     *
+     * @return array
+     *
+     * @throws \Exception
+     */
+    public function getSecretInfo($identifier)
+    {
+        if ($this->identifierExists($identifier)) {
+            $sth = $this->handle->prepare("SELECT `secret`, `counter` FROM ".$this->tablename." WHERE `identifier` = ?");
+            $sth->execute(array($identifier));
+            $result = $sth->fetch();
+            if ($result) {
+                return $result;
+            }
+        } else {
+            throw new \Exception('identifier_not_found', 404);
+        }
+        return null;
+    }
+
+    /**
      * Save the secret
      *
      * @param string $identifier
@@ -63,6 +97,23 @@ class PDO extends UserStorageAbstract
             $sth = $this->handle->prepare("INSERT INTO ".$this->tablename." (`secret`,`identifier`) VALUES (?,?)");
         }
         $sth->execute(array(serialize($secret), $identifier));
+    }
+
+    /**
+     * Update the user's counter (if possible, used for HOTP validation)
+     *
+     * @param string $identifier
+     *
+     * @throws \Exception
+     */
+    public function updateCounter($identifier)
+    {
+        if ($this->identifierExists($identifier)) {
+            $sth = $this->handle->prepare("UPDATE ".$this->tablename." SET `counter` = counter + 1 WHERE `identifier` = ?");
+            $sth->execute(array($identifier));
+        } else {
+            throw new \Exception('identifier_not_found', 404);
+        }
     }
 
     /**

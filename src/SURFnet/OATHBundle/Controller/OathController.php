@@ -56,7 +56,27 @@ class OathController extends BaseController
     public function validateOcraChallengeAction()
     {
         $request = $this->get('request_stack')->getCurrentRequest();
-        return $this->validateChallenge('ocra', $request->get('response'), $request->get('challenge'), $request->get('userId'), $request->get('sessionKey'));
+        $responseCode = 204;
+        $data = null;
+        try {
+            $this->verifyConsumerKey();
+            $oathservice = $this->getOATHService('ocra');
+            $secret = null;
+            $userId = $request->get('userId');
+            if ($userId !== null) {
+                $userStorage = $this->getUserStorage();
+                $secret = $userStorage->getSecret($userId);
+            }
+            $result = $oathservice->validateResponse($request->get('response'), $request->get('challenge'), $secret, $request->get('sessionKey'));
+            if (!$result) {
+                $responseCode = 400;
+            }
+        } catch (\Exception $e) {
+            $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString(),);
+            $responseCode = $e->getCode() ?: 500;
+        }
+        $view = $this->view($data, $responseCode);
+        return $this->handleView($view);
     }
 
     /**
@@ -66,7 +86,6 @@ class OathController extends BaseController
      *  description="Validate a HOTP challenge against a response",
      *  parameters={
      *    {"name"="response", "dataType"="string", "required"=true, "description"="The response to validate"},
-     *    {"name"="counter", "dataType"="string", "required"=true, "description"="The counter"},
      *    {"name"="userId", "dataType"="string", "required"=true, "description"="The user id"},
      *  },
      *  statusCodes={
@@ -80,7 +99,21 @@ class OathController extends BaseController
     public function validateHotpChallengeAction()
     {
         $request = $this->get('request_stack')->getCurrentRequest();
-        return $this->validateChallenge('hotp', $request->get('response'), $request->get('challenge'));
+        $responseCode = 204;
+        $data = null;
+        try {
+            $this->verifyConsumerKey();
+            $oathservice = $this->getOATHService('hotp');
+            $result = $oathservice->validateResponse($request->get('response'), $request->get('userId'), $this->getUserStorage());
+            if (!$result) {
+                $responseCode = 400;
+            }
+        } catch (\Exception $e) {
+            $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString(),);
+            $responseCode = $e->getCode() ?: 500;
+        }
+        $view = $this->view($data, $responseCode);
+        return $this->handleView($view);
     }
 
     /**
@@ -103,34 +136,12 @@ class OathController extends BaseController
     public function validateTotpChallengeAction()
     {
         $request = $this->get('request_stack')->getCurrentRequest();
-        return $this->validateChallenge('ocra', $request->get('response'), $request->get('challenge'));
-    }
-
-
-    /**
-     * Validate the challenge against the given response
-     *
-     * @param string $type
-     * @param string $response
-     * @param string $challenge
-     * @param string $userId
-     * @param string $sessionKey
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    protected function validateChallenge($type, $response, $challenge, $userId = null, $sessionKey = null)
-    {
         $responseCode = 204;
         $data = null;
         try {
             $this->verifyConsumerKey();
-            $oathservice = $this->getOATHService($type);
-            $secret = null;
-            if ($userId !== null) {
-                $userStorage = $this->getUserStorage();
-                $secret = $userStorage->getSecret($userId);
-            }
-            $result = $oathservice->validateResponse($response, $challenge, $secret, $sessionKey);
+            $oathservice = $this->getOATHService('totp');
+            $result = $oathservice->validateResponse($request->get('response'), $request->get('userId'), $this->getUserStorage());
             if (!$result) {
                 $responseCode = 400;
             }

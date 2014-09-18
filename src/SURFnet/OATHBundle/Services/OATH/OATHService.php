@@ -2,7 +2,7 @@
 
 namespace SURFnet\OATHBundle\Services\OATH;
 
-abstract class OATHAbstract
+class OATHService
 {
     /**
      * The options for the OATH. Derived classes can access this
@@ -35,26 +35,4 @@ abstract class OATHAbstract
     {
 
     }
-
-    /**
-     * Generate the challenge
-     *
-     * @return string
-     */
-    public function generateChallenge()
-    {
-
-    }
-
-    /**
-     * Validate response using the challenge and optionally the userId and sessionKey
-     *
-     * @param string $response
-     * @param string $challenge
-     * @param string $secret
-     * @param string $sessionKey
-     *
-     * @return boolean
-     */
-    abstract public function validateResponse($response, $challenge, $secret = null, $sessionKey = null);
 }

@@ -1,25 +1,31 @@
 <?php
 
-class Tiqr_OATH_HOTP
+namespace SURFnet\OATHBundle\OATH;
+
+class HOTP
 {
     /**
-     * Calculate a HOTP response 
-     * @param String $secret
-     * @param String $counter
-     * @return String The response
+     * Calculate a HOTP response
+     *
+     * @param string  $secret
+     * @param string  $counter
+     * @param integer $length
+     *
+     * @return string The response
      */
-    public function calculateResponse($secret, $counter)
+    public function calculateResponse($secret, $counter, $length = 6)
     {
         $hash = $this->_getHash($secret, $counter);
-        
-        return $this->_truncate($hash, 6); 
+        return $this->_truncate($hash, $length);
     }   
     
     /**
      * Compute a hash
-     * @param String $secret
-     * @param String $counter
-     * @return String hash
+     *
+     * @param string $secret
+     * @param string $counter
+     *
+     * @return string hash
      */
     protected function _getHash ($secret, $counter)
     {
@@ -45,9 +51,11 @@ class Tiqr_OATH_HOTP
  
     /**
      * Truncate a response to a certain length.
-     * @param String $hash
-     * @param int $length
-     * @return String a truncated response
+     *
+     * @param string  $hash
+     * @param integer $length
+     *
+     * @return string a truncated response
      */
     protected function _truncate($hash, $length = 6)
     {

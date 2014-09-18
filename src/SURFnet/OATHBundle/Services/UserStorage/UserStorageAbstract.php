@@ -46,12 +46,28 @@ abstract class UserStorageAbstract
     abstract public function getSecret($identifier);
 
     /**
+     * Get the users secret and counter
+     *
+     * @param string $identifier
+     *
+     * @return array
+     */
+    abstract public function getSecretInfo($identifier);
+
+    /**
      * Save the secret
      *
      * @param string $identifier
      * @param string $secret
      */
     abstract public function saveSecret($identifier, $secret);
+
+    /**
+     * Update the user's counter (if possible, used for HOTP validation)
+     *
+     * @param string $identifier
+     */
+    abstract public function updateCounter($identifier);
 
     /**
      * Delete the secret
