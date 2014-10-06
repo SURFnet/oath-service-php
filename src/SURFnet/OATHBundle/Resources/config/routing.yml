@@ -1,0 +1,7 @@
+surfnet_oath_secrets:
+    type: rest
+    resource: SURFnet\OATHBundle\Controller\SecretsController
+
+surfnet_oath_oath:
+    type: rest
+    resource: SURFnet\OATHBundle\Controller\OathController

@@ -1,0 +1,25 @@
+parameters:
+    locale:            en
+    secret:            ThisTokenIsNotSoSecretChangeIt
+
+    debug_toolbar:          true
+    debug_redirects:        false
+    use_assetic_controller: true
+
+    surfnet_oath:
+        userstorage:
+            type: pdo
+            options:
+                dsn: mysql:host=localhost;dbname=oathservice
+                username: root
+                password: root
+                table: secret
+        consumerKey: ThisKeyShouldBeSecret
+        oath:
+            ocra:
+                suite: OCRA-1:HOTP-SHA1-6:QH10-S
+            hotp:
+                length: 6
+            totp:
+                length: 6
+                window: 120 # in seconds
