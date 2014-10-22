@@ -15,6 +15,9 @@ class Factory
     public function createOATHService($type = 'ocra', $options = array())
     {
         switch ($type) {
+            case 'yubiotp':
+                $instance = new YubiOTP($options);
+                break;
             case "hotp":
                 $instance = new HOTP($options);
                 break;

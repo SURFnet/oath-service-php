@@ -23,3 +23,6 @@ parameters:
             totp:
                 length: 6
                 window: 120 # in seconds
+            yubiotp:
+                yhsm_validate_otp: /path/to/yhsm-validate-otp
+                device: /dev/ttyACM0
