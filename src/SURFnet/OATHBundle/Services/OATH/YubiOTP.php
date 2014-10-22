@@ -24,25 +24,25 @@ class YubiOTP extends OATHService
 
         $command = $this->options['yhsm_validate_otp'];
 
-	    if (!file_exists($command) || !is_executable($command)) {
-		    throw new \RuntimeException("The command($command) does not exist or is not executable");
-	    }
+        if (!file_exists($command) || !is_executable($command)) {
+            throw new \RuntimeException("The command($command) does not exist or is not executable");
+        }
 
-	    // Pass in the OTP key
+        // Pass in the OTP key
         $args = array('--otp', $otp);
 
-	    // Pass in the device address if set
-	    if (isset($this->options['device'])) {
-		    $args[] = '--device';
-		    $args[] = $this->options['device'];
-	    }
+        // Pass in the device address if set
+        if (isset($this->options['device'])) {
+            $args[] = '--device';
+            $args[] = $this->options['device'];
+        }
 
-	    // Build the process
+        // Build the process
         $builder = new ProcessBuilder();
         $process = $builder->setPrefix($command)
                            ->setArguments($args)
                            ->getProcess();
 
-	    return ($process->run() === 0);
+        return ($process->run() === 0);
     }
 }
