@@ -89,6 +89,12 @@ or using pip:
     pip install pyhsm
     pip install lockfile
 
+If YubiHSM is unplugged from the server the keystore needs to be unlocked using the following command:
+
+    yhsm-keystore-unlock --device /dev/ttyACM0
+
+
+
 
 
 In order for the web-server user to validate the OTP tokens it must be added to the group that owns the device node for YubiHSM or an additional
