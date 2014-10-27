@@ -16,9 +16,9 @@ class BaseController extends FOSRestController
         $request = $this->get('request_stack')->getCurrentRequest();
         $consumerKey = $request->headers->get('x-oathservice-consumerkey');
         $config = $this->container->getParameter('surfnet_oath.consumerkey');
-        //if ($consumerKey != $config) {
-        //    throw new \Exception("invalid_consumerkey", 401);
-        //}
+        if ($consumerKey != $config) {
+            throw new \Exception("invalid_consumerkey", 401);
+        }
     }
 
     /**
