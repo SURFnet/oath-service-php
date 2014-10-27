@@ -20,7 +20,7 @@ abstract class UserStorageAbstract
      */
     public function __construct($options = array())
     {
-        $this->options = $options;
+        $this->options = $options ['options'];
     }
 
     /**
