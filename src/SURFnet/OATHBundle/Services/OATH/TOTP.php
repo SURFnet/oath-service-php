@@ -19,7 +19,7 @@ class TOTP extends OATHService
     public function validateResponse($response, $userId, UserStorageAbstract $userStorage)
     {
         $secret = $userStorage->getSecret($userId);
-        $totp = new OATH_TOTP();
+        $totp = new OATH_TOTP($this->getHash ());
         $totpResponse = $totp->calculateResponse($secret, $this->options['window'], $this->options['length']);
         return ($totpResponse == $response);
     }

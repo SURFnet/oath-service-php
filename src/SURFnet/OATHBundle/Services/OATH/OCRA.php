@@ -231,7 +231,8 @@ class OCRA extends OATHService
      */
     public function validateResponse($response, $challenge, $secret, $sessionKey)
     {
-        $expected = OATH_OCRA::generateOCRA($this->OCRASuite, $secret, "", $challenge, "", $sessionKey, "");
+        $ocra = new OCRA($this->getHash ());
+        $expected = $ocra->generateOCRA($this->OCRASuite, $secret, "", $challenge, "", $sessionKey, "");
         return $this->constEqual($expected, $response);
     }
 

@@ -154,43 +154,6 @@ class OathController extends BaseController
     }
 
     /**
-     * @Get("/oath/validate/yubiotp")
-     * @ApiDoc(
-     *  section="OATH",
-     *  description="Validate a YubiKey OTP against YubiHSM",
-     *  parameters={
-     *    {"name"="otp", "dataType"="string", "required"=true, "description"="The OTP passed in by the user"},
-     *    {"name"="userId", "dataType"="string", "required"=true, "description"="The user id"},
-     *  },
-     *  statusCodes={
-     *      204="Success, OTP is valid",
-     *      400="OTP is not valid",
-     *      401="Invalid consumer key",
-     *      500="General error, something went wrong",
-     *  },
-     * )
-     */
-    public function validateYubiOtpAction()
-    {
-        $request = $this->get('request_stack')->getCurrentRequest();
-        $responseCode = 500;
-        $data = null;
-        try {
-            $this->verifyConsumerKey();
-            $oathservice = $this->getOATHService('yubiotp');
-            $result = $oathservice->validateResponse($request->get('otp'), $request->get('userId'), $this->getUserStorage());
-            if (!$result) {
-                $responseCode = 400;
-            }
-        } catch (\Exception $e) {
-            $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString(),);
-            $responseCode = 500;
-        }
-        $view = $this->view($data, $responseCode);
-        return $this->handleView($view);
-    }
-
-    /**
      * Create the storage class using the storage factory and return the class
      *
      * @param string $type
@@ -199,8 +162,6 @@ class OathController extends BaseController
      */
     protected function getOATHService($type)
     {
-        $oathFactory = $this->get('surfnet_oath.oath.factory');
-        $config = $this->container->getParameter('surfnet_oath');
-        return $oathFactory->createOATHService($type, (isset($config['oath'][$type]) ? $config['oath'][$type] : array()));
+        return $this->get ("surfnet_oath.oath.service.{$type}");
     }
 }

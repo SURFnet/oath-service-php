@@ -44,7 +44,6 @@ HSM (keys changed)> keycommit - Done
 HSM> dbload - Load id data now. Press ESC to quit
 00001 - inserted ok
 HSM> keycommit - Done
-HSM> exit
 ```
 
 Note: Make sure you store cfg password and master key into a safe place
@@ -64,16 +63,33 @@ So in my case the line for YubiKey NEO looked a bit like this (I changed random 
 So, now your HSM is initialised with a single UbiKey and it's ready to do validation of OTPs. You can verify that everything went well by
 generating an OTP with the YubiKey configured in dbload step and using _otpver_ command in minicom. 
 
+# Generating Keys
+
+Next step is to generate a key to use to encrypt the secrets. Key can be generated using the following command in minicom:
+
+keygen <start index> <number of keys to generate> <length>
+
+The following command will create keyhandle 98 with a 20 byte key:
+
+    keygen 98 1 20
+
+You should make a note of the generated key in case you lose access to the YubiHSM for some reason. Just keep it safe. At this point
+it's good to make note of the key handle as well because this handle will be used to generate AEADs for user secrets later.
+
 
 # Server-side preparations
 
-python-pyhsm is required on the server-side. The package is available in apt:
+python-pyhsm and lockfile is required on the server-side. The package is available in apt:
 
     apt-get install python-pyhsm
+    apt-get install python-lockfile
 
 or using pip:
 
     pip install pyhsm
+    pip install lockfile
+
+
 
 In order for the web-server user to validate the OTP tokens it must be added to the group that owns the device node for YubiHSM or an additional
 udev rule is needed to change the group of the device node. For example:
