@@ -70,6 +70,7 @@ keygen <start index> <number of keys to generate> <length>
 The following command will create keyhandle 98 with a 20 byte key:
 
     keygen 98 1 20
+    keycommit
 
 You should make a note of the generated key in case you lose access to the YubiHSM for some reason. Just keep it safe. At this point
 it's good to make note of the key handle as well because this handle will be used to generate AEADs for user secrets later.
