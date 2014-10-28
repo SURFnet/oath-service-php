@@ -7,8 +7,6 @@ PHP implementation of an OATH service
 Setting up YubiHSM
 ==================
 
-# Preparing YubiHSM
-
 Press the small configuration button using a paperclip or a pin on YubiHSM and insert it into a USB slot of a trusted computer. This puts the
 HSM into configuration mode and it can be programmed.
 
