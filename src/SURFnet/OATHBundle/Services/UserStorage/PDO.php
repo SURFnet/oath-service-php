@@ -32,7 +32,7 @@ class PDO extends UserStorageAbstract
     public function init()
     {
         $this->handle = new \PDO($this->options['dsn'], $this->options['username'], $this->options['password']);
-        $this->handle->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        //$this->handle->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->tablename = $this->options["table"];
     }
 
