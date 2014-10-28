@@ -7,7 +7,7 @@ parameters:
     use_assetic_controller: true
 
     surfnet_oath.userstorage:
-        type: pdohsm
+        type: pdo
         options:
           dsn: mysql:host=localhost;dbname=oathservice
           username: root
