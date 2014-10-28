@@ -9,6 +9,10 @@ class YubiHSM {
     private $device;
     private $keyHandle;
 
+    /**
+     * Contstruct a new instance of YubiHSM
+     *
+     */
     public function __construct (array $options)
     {
         $this->device    = $options ['device'];
@@ -16,6 +20,14 @@ class YubiHSM {
         $this->commands  = $options ['commands'];
     }
 
+    /**
+     * Initialise OATH token from secret. Returns a JSON
+     * string containing AEAD and nonce
+     *
+     * @param string                $secret
+     *
+     * @return string
+     */
     public function initOath ($secret)
     {
         $command = $this->commands['oath_init'];
@@ -34,6 +46,15 @@ class YubiHSM {
         return $process->getOutput();
     }
 
+    /**
+     * Create sha1 hmac using AEAD and nonce
+     *
+     * @param string  $aead  Hex-encoded AEAD
+     * @param string  $nonce Hex-encoded nonce
+     * @param string  $aead  Data (not hex encoded)
+     *
+     * @return string
+     */
     public function sha1Hmac ($aead, $nonce, $data)
     {
         $command = $this->commands['hash_aead'];
