@@ -72,9 +72,17 @@ Next, create the `secret` table
 
 You should now be able to store user's secrets and validate OTPs using the API. Note that the API requires an HTTP header carrying a consumer key. To store a secret for user `john`:
 
-    curl --header "x-oathservice-consumerkey: ThisKeyShouldBeSecret" 'http://0:8000/secrets/john' --data secret=1234
+    curl --header "x-oathservice-consumerkey: ThisKeyShouldBeSecret" 'http://0:8000/secrets/john' --data secret=3132333435363738393031323334353637383930
 
-To validate an OTP for this user, using the HOTP algorithm
+To calculate the OTP, you can use the `oathtool` package:
+
+	sudo apt-get install -y oathtool
+
+To calculate an OTP according to the HOTP algorithm, for a given secret and counter, use
+
+	oathtool --hotp --counter=0 3132333435363738393031323334353637383930
+
+To validate an OTP for this user:
 
     curl --header "x-oathservice-consumerkey: ThisKeyShouldBeSecret" 'http://0:8000/oath/validate/hotp?userId=john&counter=0&response=755224'
 
