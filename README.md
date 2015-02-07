@@ -1,7 +1,10 @@
 oath-service-php
 ================
 
-PHP implementation of an OATH service, with support for HOTP, TOTP, and OCRA.
+PHP implementation of an OATH service, with support for HOTP, TOTP, and OCRA. See
+- http://www.ietf.org/rfc/rfc4226.txt
+- http://www.ietf.org/rfc/rfc6238.txt
+- http://www.ietf.org/rfc/rfc6287.txt
 
 Dependencies
 ============
@@ -72,23 +75,23 @@ Next, create the `secret` table
 
 You should now be able to store user's secrets and validate OTPs using the API. Note that the API requires an HTTP header carrying a consumer key. To store a secret for user `john`:
 
-    curl --header "x-oathservice-consumerkey: ThisKeyShouldBeSecret" 'http://0:8000/secrets/john' --data secret=3132333435363738393031323334353637383930
+    curl --header "x-oathservice-consumerkey: ThisKeyShouldBeSecret" 'http://0:8000/secrets/john' --data secret=12345678901234567890
 
-To calculate the OTP, you can use the `oathtool` package:
-
-	sudo apt-get install -y oathtool
-
-To calculate an OTP according to the HOTP algorithm, for a given secret and counter, use
-
-	oathtool --hotp --counter=0 3132333435363738393031323334353637383930
-
-To validate an OTP for this user:
+To validate an OTP for this user (using test vectors from RFC 4226):
 
     curl --header "x-oathservice-consumerkey: ThisKeyShouldBeSecret" 'http://0:8000/oath/validate/hotp?userId=john&counter=0&response=755224'
 
 To delete the secret for this user:
 
     curl --header "x-oathservice-consumerkey: ThisKeyShouldBeSecret" 'http://0:8000/secrets/john' --request DELETE
+
+To calculate OTPs for testing, you can use the `oathtool` package:
+
+	sudo apt-get install -y oathtool
+
+To calculate an OTP according to the HOTP algorithm, for a given secret and counter, use
+
+	oathtool --hotp --counter=0 3132333435363738393031323334353637383930
 
 Running the API from Apache
 ----------------------------
