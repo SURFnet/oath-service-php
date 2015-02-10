@@ -85,15 +85,20 @@ To delete the secret for this user:
 
     curl --header "x-oathservice-consumerkey: ThisKeyShouldBeSecret" 'http://0:8000/secrets/john' --request DELETE
 
-To calculate OTPs for testing, you can use the `oathtool` package:
+To calculate an OTP according to the HOTP algorithm (for testing purposes), for a given secret and counter, use
+
+	php -r 'include("src/SURFnet/OATHBundle/OATH/HOTP.php");echo (new SURFnet\OATHBundle\OATH\HOTP())->calculateResponse("12345678901234567890",0);'
+
+Alternatively, you can use the `oathtool` package:
 
 	sudo apt-get install -y oathtool
-
-To calculate an OTP according to the HOTP algorithm, for a given secret and counter, use
-
 	oathtool --hotp --counter=0 3132333435363738393031323334353637383930
 
-Running the API from Apache
-----------------------------
 
-TO DO
+Running the API from a web server
+---------------------------------
+
+Please refer to the symfony docs:
+
+http://symfony.com/doc/current/cookbook/configuration/web_server_configuration.html
+
