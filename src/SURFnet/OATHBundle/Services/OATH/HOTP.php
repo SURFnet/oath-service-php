@@ -19,8 +19,9 @@ class HOTP extends OATHService
     public function validateResponse($response, $userId, UserStorageAbstract $userStorage)
     {
         $user = $userStorage->getSecretInfo($userId);
-        $hotp = new OATH_HOTP();
+        $hotp = new OATH_HOTP($this->getHash ());
         $hotpResponse = $hotp->calculateResponse($user['secret'], $user['counter'], $this->options['length']);
+
         if ($hotpResponse == $response) {
             $userStorage->updateCounter($userId);
             return true;

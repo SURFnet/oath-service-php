@@ -1,9 +1,19 @@
-parameters:
-    surfnet_oath.oath.factory.class: SURFnet\OATHBundle\Services\OATH\Factory
-    surfnet_oath.userstorage.factory.class: SURFnet\OATHBundle\Services\UserStorage\Factory
-
 services:
-    surfnet_oath.oath.factory:
-        class: %surfnet_oath.oath.factory.class%
-    surfnet_oath.userstorage.factory:
-        class: %surfnet_oath.userstorage.factory.class%
+    surfnet_oath.oath.service.ocra:
+      class: SURFnet\OATHBundle\Services\OATH\OCRA
+      arguments: [%surfnet_oath.oath.ocra%]
+      calls:
+          - [init]
+          - [setHash, ["@surfnet_oath.hash"]]
+    surfnet_oath.oath.service.hotp:
+      class: SURFnet\OATHBundle\Services\OATH\HOTP
+      arguments: [%surfnet_oath.oath.hotp%]
+      calls:
+          - [init]
+          - [setHash, ["@surfnet_oath.hash"]]
+    surfnet_oath.oath.service.totp:
+      class: SURFnet\OATHBundle\Services\OATH\TOTP
+      arguments: [%surfnet_oath.oath.totp%]
+      calls:
+          - [init]
+          - [setHash, ["@surfnet_oath.hash"]]

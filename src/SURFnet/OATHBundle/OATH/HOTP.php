@@ -2,7 +2,7 @@
 
 namespace SURFnet\OATHBundle\OATH;
 
-class HOTP
+class HOTP extends AbstractOath
 {
     /**
      * Calculate a HOTP response
@@ -45,7 +45,7 @@ class HOTP
          }
      
          // HMAC
-         $hash = hash_hmac ('sha1', $bin_counter, $secret);
+         $hash = $this->getHash()->sha1Hmac($bin_counter, $secret);
          return $hash;
     }
  
