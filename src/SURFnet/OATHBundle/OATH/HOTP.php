@@ -2,7 +2,7 @@
 
 namespace SURFnet\OATHBundle\OATH;
 
-class HOTP extends AbstractOath
+class HOTP extends AbstractOATH
 {
     /**
      * Calculate a HOTP response
