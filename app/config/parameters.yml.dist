@@ -6,20 +6,28 @@ parameters:
     debug_redirects:        false
     use_assetic_controller: true
 
-    surfnet_oath:
-        userstorage:
-            type: pdo
-            options:
-                dsn: mysql:host=localhost;dbname=oathservice
-                username: root
-                password: root
-                table: secret
-        consumerKey: ThisKeyShouldBeSecret
-        oath:
-            ocra:
-                suite: OCRA-1:HOTP-SHA1-6:QH10-S
-            hotp:
-                length: 6
-            totp:
-                length: 6
-                window: 120 # in seconds
+    surfnet_oath.userstorage:
+        type: pdo
+        options:
+          dsn: mysql:host=localhost;dbname=oathservice
+          username: root
+          password: secret
+          table: storage
+
+    surfnet_oath.consumerKey: ThisKeyShouldBeSecret
+    surfnet_oath.oath.ocra:
+        suite: OCRA-1:HOTP-SHA1-6:QH10-S
+    surfnet_oath.oath.hotp:
+        length: 6
+    surfnet_oath.oath.totp:
+        length: 6
+        window: 120 # in seconds
+
+    # Configuration for YubiHSM
+    surfnet_oath.yubihsm:
+        device: /dev/ttyACM1
+        key_handle: 2
+        commands:
+            oath_init:          /mnt/hgfs/projects/oath-service-php/utils/oath-init.py
+            oath_hotp_validate: /mnt/hgfs/projects/oath-service-php/utils/oath-hotp-validate.py
+            hash_aead:          /mnt/hgfs/projects/oath-service-php/utils/hash-aead.py

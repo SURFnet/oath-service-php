@@ -10,6 +10,8 @@
  */
 
 namespace SURFnet\OATHBundle\OATH;
+use SURFnet\OATHBundle\Services\Hash\HSM;
+use SURFnet\OATHBundle\Services\Hash\Soft;
 
 /**
  * This a PHP port of the example implementation of the 
@@ -19,30 +21,8 @@ namespace SURFnet\OATHBundle\OATH;
  * @author Johan Rydell, PortWise (original Java)
  * @author Ivo Jansch, Egeniq (PHP port)
  */
-class OCRA
+class OCRA extends AbstractOath
 {
-    private function __construct()
-    {
-        
-    }
-
-    /**
-     * This method uses the hmac_hash function to provide the crypto
-     * algorithm.
-     * HMAC computes a Hashed Message Authentication Code with the
-     * crypto hash algorithm as a parameter.
-     *
-     * @param String crypto     the crypto algorithm (sha1, sha256 or sha512)
-     * @param String keyBytes   the bytes to use for the HMAC key
-     * @param String text       the message or text to be authenticated.
-     */
-    private static function _hmac_sha1($crypto,
-            $keyBytes,
-            $text)
-    {
-         $hash = hash_hmac ($crypto, $text, $keyBytes);
-         return $hash;
-    }
 
     /**
      * This method converts HEX string to Byte[]
@@ -51,7 +31,7 @@ class OCRA
      *
      * @return String a string with raw bytes
      */
-    private static function _hexStr2Bytes($hex){
+    private function _hexStr2Bytes($hex){
         return pack("H*", $hex);
     }
 
@@ -76,7 +56,7 @@ class OCRA
      * @return A numeric String in base 10 that includes
      * {@link truncationDigits} digits
      */
-    static function generateOCRA($ocraSuite,
+    public function generateOCRA($ocraSuite,
                                  $key,
                                  $counter,
                                  $question,
@@ -193,7 +173,7 @@ class OCRA
         }
         
         // Delimiter
-        $msg[strlen($ocraSuite)] = self::_hexStr2Bytes("0");
+        $msg[strlen($ocraSuite)] = $this->_hexStr2Bytes("0");
 
         // Put the bytes of "Counter" to the message
         // Input is HEX encoded
@@ -208,7 +188,7 @@ class OCRA
         // Put the bytes of "question" to the message
         // Input is text encoded
         if($questionLength > 0 ) {
-            $bArray = self::_hexStr2Bytes($question);
+            $bArray = $this->_hexStr2Bytes($question);
             for ($i=0;$i<strlen($bArray);$i++) {
                 $msg [$i + $ocraSuiteLength + 1 + $counterLength] = $bArray[$i];
             }
@@ -217,7 +197,7 @@ class OCRA
         // Put the bytes of "password" to the message
         // Input is HEX encoded
         if($passwordLength > 0){
-            $bArray = self::_hexStr2Bytes($password);
+            $bArray = $this->_hexStr2Bytes($password);
             for ($i=0;$i<strlen($bArray);$i++) {
                 $msg [$i + $ocraSuiteLength + 1 + $counterLength + $questionLength] = $bArray[$i];
             }
@@ -226,7 +206,7 @@ class OCRA
         // Put the bytes of "sessionInformation" to the message
         // Input is text encoded
         if($sessionInformationLength > 0 ){
-            $bArray = self::_hexStr2Bytes($sessionInformation);
+            $bArray = $this->_hexStr2Bytes($sessionInformation);
             for ($i=0;$i<strlen($bArray);$i++) {
                 $msg [$i + $ocraSuiteLength + 1 + $counterLength + $questionLength + $passwordLength] = $bArray[$i];
             }
@@ -235,19 +215,26 @@ class OCRA
         // Put the bytes of "time" to the message
         // Input is text value of minutes
         if($timeStampLength > 0){
-            $bArray = self::_hexStr2Bytes($timeStamp);
+            $bArray = $this->_hexStr2Bytes($timeStamp);
             for ($i=0;$i<strlen($bArray);$i++) {
                 $msg [$i + $ocraSuiteLength + 1 + $counterLength + $questionLength + $passwordLength + $sessionInformationLength] = $bArray[$i];
             }
         }
-        
-        $byteKey = self::_hexStr2Bytes($key);
-              
+
         $msg = implode("", $msg);
-        
-        $hash = self::_hmac_sha1($crypto, $byteKey, $msg);
-        
-        $result = self::_oath_truncate($hash, $codeDigits);
+
+        if (($this->getHash () instanceof HSM)) {
+            if ($cryptoFunction != "sha1") {
+                throw new \Exception ('Only SHA1 HMAC is supported using YubiHSM', 500);
+            }
+            $hash = $this->getHash()->sha1Hmac($msg, $key);
+        }
+        else {
+            $byteKey = $this->_hexStr2Bytes($key);
+            $hash = hash_hmac ($crypto, $msg, $byteKey);
+        }
+
+        $result = $this->_oath_truncate($hash, $codeDigits);
              
         return $result;
     }
@@ -255,7 +242,7 @@ class OCRA
     /**
      * Truncate a result to a certain length
      */    
-    static function _oath_truncate($hash, $length = 6)
+    private function _oath_truncate($hash, $length = 6)
     {
         // Convert to dec
         foreach(str_split($hash,2) as $hex)

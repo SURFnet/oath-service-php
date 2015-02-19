@@ -2,8 +2,13 @@
 
 namespace SURFnet\OATHBundle\Services\OATH;
 
+use SURFnet\OATHBundle\Services\Hash\HashInterface;
+
 class OATHService
 {
+
+    private $hash;
+
     /**
      * The options for the OATH. Derived classes can access this
      * to retrieve options configured.
@@ -31,8 +36,16 @@ class OATHService
      * Note: this method is not abstract since not every derived class
      * will want to implement this.
      */
-    public function init()
+    public function init ()
     {
 
+    }
+
+    public function setHash (HashInterface $hash) {
+        $this->hash = $hash;
+    }
+
+    public function getHash () {
+        return $this->hash;
     }
 }

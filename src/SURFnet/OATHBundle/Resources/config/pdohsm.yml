@@ -1,0 +1,15 @@
+services:
+    # For HSM secrets
+    surfnet_oath.hsm:
+        class:     SURFnet\OATHBundle\Services\HSM\YubiHSM
+        arguments: [%surfnet_oath.yubihsm%]
+    surfnet_oath.storage.user:
+        class: SURFnet\OATHBundle\Services\UserStorage\PDOHSM
+        arguments: [%surfnet_oath.userstorage%]
+        calls:
+            - [init]
+            - [setYubiHSM, ["@surfnet_oath.hsm"]]
+    surfnet_oath.hash:
+        class:     SURFnet\OATHBundle\Services\Hash\HSM
+        calls:
+            - [setYubiHSM, ["@surfnet_oath.hsm"]]

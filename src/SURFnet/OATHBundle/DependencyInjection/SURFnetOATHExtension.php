@@ -23,6 +23,22 @@ class SURFnetOATHExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $storage = $container->getParameter('surfnet_oath.userstorage');
+
+        switch ($storage ["type"]) {
+
+            case 'pdo':
+                $loader->load('pdo.yml');
+                break;
+
+            case 'pdohsm':
+                $loader->load('pdohsm.yml');
+                break;
+
+            default:
+                throw new \RuntimeException('Unknown storage type: ' . $storage ["type"]);
+        }
+
         $loader->load('services.yml');
     }
 }

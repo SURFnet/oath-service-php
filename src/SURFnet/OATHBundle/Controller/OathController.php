@@ -162,8 +162,6 @@ class OathController extends BaseController
      */
     protected function getOATHService($type)
     {
-        $oathFactory = $this->get('surfnet_oath.oath.factory');
-        $config = $this->container->getParameter('surfnet_oath');
-        return $oathFactory->createOATHService($type, (isset($config['oath'][$type]) ? $config['oath'][$type] : array()));
+        return $this->get ("surfnet_oath.oath.service.{$type}");
     }
 }

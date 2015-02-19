@@ -15,8 +15,8 @@ class BaseController extends FOSRestController
     {
         $request = $this->get('request_stack')->getCurrentRequest();
         $consumerKey = $request->headers->get('x-oathservice-consumerkey');
-        $config = $this->container->getParameter('surfnet_oath');
-        if ($consumerKey != $config['consumerKey']) {
+        $config = $this->container->getParameter('surfnet_oath.consumerkey');
+        if ($consumerKey != $config) {
             throw new \Exception("invalid_consumerkey", 401);
         }
     }
@@ -30,8 +30,6 @@ class BaseController extends FOSRestController
      */
     protected function getUserStorage()
     {
-        $userStorageFactory = $this->get('surfnet_oath.userstorage.factory');
-        $config = $this->container->getParameter('surfnet_oath');
-        return $userStorageFactory->createUserStorage($config['userstorage']['type'], $config['userstorage']['options']);
+        return $this->get ("surfnet_oath.storage.user");
     }
 }
