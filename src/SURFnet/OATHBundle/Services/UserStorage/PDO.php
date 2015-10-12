@@ -50,7 +50,7 @@ class PDO extends UserStorageAbstract
         if ($this->identifierExists($identifier)) {
             $sth = $this->handle->prepare("SELECT `secret` FROM ".$this->tablename." WHERE `identifier` = ?");
             $sth->execute(array($identifier));
-            $result = unserialize($sth->fetchColumn());
+            $result = $sth->fetchColumn();
             if ($result) {
                 return $result;
             }
@@ -76,7 +76,6 @@ class PDO extends UserStorageAbstract
             $sth->execute(array($identifier));
             $result = $sth->fetch();
             if ($result) {
-                $result ['secret'] = unserialize($result ['secret']);
                 return $result;
             }
         } else {
@@ -98,7 +97,7 @@ class PDO extends UserStorageAbstract
         } else {
             $sth = $this->handle->prepare("INSERT INTO ".$this->tablename." (`secret`,`identifier`) VALUES (?,?)");
         }
-        $sth->execute(array(serialize($secret), $identifier));
+        $sth->execute(array($secret, $identifier));
     }
 
     /**
