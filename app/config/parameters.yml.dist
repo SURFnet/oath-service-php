@@ -13,6 +13,13 @@ parameters:
           username: root
           password: secret
           table: storage
+          encryption:
+            type: mcrypt
+            options:
+                cipher:
+                mode:
+                key:
+                iv:
 
     surfnet_oath.consumerKey: ThisKeyShouldBeSecret
     surfnet_oath.oath.ocra:
