@@ -24,7 +24,13 @@ class Mcrypt implements UserEncryptionInterface
         $this->_cipher = $config['cipher'];
         $this->_mode = $config['mode'];
         $this->_key = $config['key'];
-        $this->_iv = $config['iv'];
+
+        if (!empty($config['iv'])) {
+            $this->_iv = $config['iv'];
+        } else {
+            $iv_size = mcrypt_get_iv_size($this->_cipher, $this->_mode);
+            $this->_iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+        }
     }
     
     /**
