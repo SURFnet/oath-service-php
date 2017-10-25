@@ -14,12 +14,10 @@ parameters:
           password: secret
           table: storage
           encryption:
-            type: mcrypt
+            type: aeskw
             options:
-                cipher:
-                mode:
-                key:
-                iv:
+                algo:
+                kek:
 
     surfnet_oath.consumerKey: ThisKeyShouldBeSecret
     surfnet_oath.oath.ocra:

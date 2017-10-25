@@ -4,6 +4,7 @@ namespace SURFnet\OATHBundle\Services\UserStorage;
 
 use SURFnet\OATHBundle\Services\UserStorage\Encryption\Dummy as Dummy;
 use SURFnet\OATHBundle\Services\UserStorage\Encryption\Mcrypt as Mcrypt;
+use SURFnet\OATHBundle\Services\UserStorage\Encryption\Aeskw as Aeskw;
 
 /**
  * Class PDO storage
