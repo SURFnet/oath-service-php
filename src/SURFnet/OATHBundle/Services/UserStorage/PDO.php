@@ -2,6 +2,10 @@
 
 namespace SURFnet\OATHBundle\Services\UserStorage;
 
+use SURFnet\OATHBundle\Services\UserStorage\Encryption\Dummy as Dummy;
+use SURFnet\OATHBundle\Services\UserStorage\Encryption\Mcrypt as Mcrypt;
+use SURFnet\OATHBundle\Services\UserStorage\Encryption\Aeskw as Aeskw;
+
 /**
  * Class PDO storage
  * Table structure (for mysql):
@@ -27,13 +31,27 @@ class PDO extends UserStorageAbstract
     protected $tablename;
 
     /**
+     * The encryption instance
+     *
+     * @var UserEncryptionInterface
+     */
+    protected $encryption;
+
+    /**
      * Initialize pdo handle
      */
     public function init()
     {
         $this->handle = new \PDO($this->options['dsn'], $this->options['username'], $this->options['password']);
-        //$this->handle->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->tablename = $this->options["table"];
+
+        if (isset($this->options['encryption']) && isset($this->options['encryption']['type'])) {
+            $class = '\SURFnet\OATHBundle\Services\UserStorage\Encryption\\'.ucfirst($this->options['encryption']['type']);
+            $options = (isset($this->options['encryption']['options']) ? $this->options['encryption']['options'] : null);
+            $this->encryption = new $class($options);
+        } else {
+            $this->encryption = new Dummy(null);
+        }
     }
 
     /**
@@ -50,7 +68,7 @@ class PDO extends UserStorageAbstract
         if ($this->identifierExists($identifier)) {
             $sth = $this->handle->prepare("SELECT `secret` FROM ".$this->tablename." WHERE `identifier` = ?");
             $sth->execute(array($identifier));
-            $result = $sth->fetchColumn();
+            $result = $this->encryption->decrypt($sth->fetchColumn());
             if ($result) {
                 return $result;
             }
@@ -97,7 +115,7 @@ class PDO extends UserStorageAbstract
         } else {
             $sth = $this->handle->prepare("INSERT INTO ".$this->tablename." (`secret`,`identifier`) VALUES (?,?)");
         }
-        $sth->execute(array($secret, $identifier));
+        $sth->execute(array($this->encryption->encrypt($secret), $identifier));
     }
 
     /**

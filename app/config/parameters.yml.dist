@@ -13,6 +13,11 @@ parameters:
           username: root
           password: secret
           table: storage
+          encryption:
+            type: aeskw
+            options:
+                algo:
+                kek:
 
     surfnet_oath.consumerKey: ThisKeyShouldBeSecret
     surfnet_oath.oath.ocra:

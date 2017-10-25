@@ -17,7 +17,8 @@
         "incenteev/composer-parameter-handler": "~2.0",
         "nelmio/api-doc-bundle": "@stable",
         "friendsofsymfony/rest-bundle": "@stable",
-        "jms/serializer-bundle": "@stable"
+        "jms/serializer-bundle": "@stable",
+        "sop/aes-kw": "^1.0"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
