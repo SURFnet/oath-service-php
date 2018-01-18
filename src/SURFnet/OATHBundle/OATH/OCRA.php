@@ -21,7 +21,7 @@ use SURFnet\OATHBundle\Services\Hash\Soft;
  * @author Johan Rydell, PortWise (original Java)
  * @author Ivo Jansch, Egeniq (PHP port)
  */
-class OCRA extends AbstractOath
+class OCRA extends AbstractOATH
 {
 
     /**

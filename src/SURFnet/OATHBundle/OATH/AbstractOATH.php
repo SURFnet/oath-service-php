@@ -3,7 +3,7 @@ namespace SURFnet\OATHBundle\OATH;
 
 use \SURFnet\OATHBundle\Services\Hash\HashInterface;
 
-abstract class AbstractOath {
+abstract class AbstractOATH {
 
     private $hash;
 
