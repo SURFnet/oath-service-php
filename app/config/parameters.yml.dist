@@ -13,6 +13,11 @@ parameters:
           username: root
           password: secret
           table: storage
+          encryption:
+            type: openssl
+            options:
+                method: #a string containing the cipher method, e.g. aes-256-cbc, see http://php.net/manual/en/function.openssl-get-cipher-methods.php for more info on available cipher methods
+                key: #the encryption key, 256-bit
 
     surfnet_oath.consumerKey: ThisKeyShouldBeSecret
     surfnet_oath.oath.ocra:
