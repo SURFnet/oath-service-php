@@ -2,8 +2,7 @@
 
 namespace SURFnet\OATHBundle\Services\UserStorage;
 
-use SURFnet\OATHBundle\Services\UserStorage\Encryption\Dummy as Dummy;
-use SURFnet\OATHBundle\Services\UserStorage\Encryption\Openssl as Mcrypt;
+use SURFnet\OATHBundle\Services\UserStorage\Encryption\Dummy;
 
 /**
  * Class PDO storage
@@ -93,6 +92,7 @@ class PDO extends UserStorageAbstract
             $sth->execute(array($identifier));
             $result = $sth->fetch();
             if ($result) {
+                $result['secret'] = $this->encryption->decrypt($result['secret']);
                 return $result;
             }
         } else {

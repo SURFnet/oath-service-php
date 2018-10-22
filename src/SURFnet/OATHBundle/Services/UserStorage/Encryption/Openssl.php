@@ -1,10 +1,10 @@
-<?php 
+<?php
 
 namespace SURFnet\OATHBundle\Services\UserStorage\Encryption;
 
 /**
  * Class for encrypting/decrypting the user secret with openssl.
- * 
+ *
  * @author peter
  */
 class Openssl implements UserEncryptionInterface
@@ -25,13 +25,13 @@ class Openssl implements UserEncryptionInterface
         }
         $this->_key = $config['key'];
     }
-    
+
     /**
-     * Encrypts the given data. 
+     * Encrypts the given data.
      *
      * @param String $data Data to encrypt.
      *
-     * @return encrypted data
+     * @return string encrypted data
      */
     public function encrypt($data)
     {
@@ -46,21 +46,20 @@ class Openssl implements UserEncryptionInterface
             $iv
         );
 
-        return $iv . $ciphertext;
+        return base64_encode($ciphertext . '::' . $iv);
     }
-    
+
     /**
-      * Decrypts the given data.
+     * Decrypts the given data.
      *
      * @param String $data Data to decrypt.
      *
-     * @return decrypted data
+     * @return string decrypted data
      */
     public function decrypt($data)
     {
         $ivsize = openssl_cipher_iv_length($this->_method);
-        $iv = mb_substr($data, 0, $ivsize, '8bit');
-        $ciphertext = mb_substr($data, $ivsize, null, '8bit');
+        list($ciphertext, $iv) = explode('::', base64_decode($data), 2);
 
         return openssl_decrypt(
             $ciphertext,
