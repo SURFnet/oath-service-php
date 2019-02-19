@@ -7,7 +7,7 @@ FROM composer:1.7 as composer
 #
 # Application
 #
-FROM php:7.2-fpm AS base
+FROM php:5.6-fpm AS base
 
 RUN apt-get update \
     && apt-get install -y git libicu-dev \
@@ -26,5 +26,5 @@ COPY . /var/www/html
 #
 FROM base as develop
 
-RUN pecl install xdebug-2.6.0
+RUN pecl install xdebug-2.4.0
 RUN docker-php-ext-enable xdebug

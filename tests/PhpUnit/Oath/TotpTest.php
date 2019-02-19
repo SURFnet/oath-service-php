@@ -14,14 +14,15 @@ class TotpTest extends TestCase
      */
     private $http;
 
-    public function setUp(): void
+    public function setUp()
     {
         $this->http = new Client([
             'base_uri' => 'http://web/',
         ]);
     }
 
-    public function tearDown(): void {
+    public function tearDown()
+    {
         $this->http = null;
     }
 

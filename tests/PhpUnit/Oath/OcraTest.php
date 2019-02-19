@@ -12,14 +12,15 @@ class OcraTest extends TestCase
      */
     private $http;
 
-    public function setUp(): void
+    public function setUp()
     {
         $this->http = new Client([
             'base_uri' => 'http://web/',
         ]);
     }
 
-    public function tearDown(): void {
+    public function tearDown()
+    {
         $this->http = null;
     }
 
@@ -35,7 +36,7 @@ class OcraTest extends TestCase
         ]);
         $this->assertEquals(200, $response->getStatusCode());
 
-        $this->assertRegExp("/^\"[a-zA-Z0-9]{10}\"$/", $response->getBody());
+        $this->assertRegExp("/^\"[a-zA-Z0-9]{10}\"$/", $response->getBody()->getContents());
     }
 
     /**

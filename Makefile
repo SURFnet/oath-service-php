@@ -14,7 +14,7 @@ down:
 composer:
 	${COMMAND} run --rm php composer install --no-interaction
 
-tests: test-phpmd test-phpcs
+tests: test-phpmd test-phpcs test-phpunit test-security
 
 test-phpmd:
 	${COMMAND} run --rm php bin/phpmd src text config/phpmd.xml --exclude */Tests/*
@@ -24,3 +24,6 @@ test-phpcs:
 
 test-phpunit:
 	${COMMAND} run --rm php bin/phpunit -c config/phpunit.xml --coverage-text
+
+test-security:
+	${COMMAND} run --rm php bin/security-checker security:check
