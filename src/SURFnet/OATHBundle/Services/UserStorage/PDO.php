@@ -3,7 +3,6 @@
 namespace SURFnet\OATHBundle\Services\UserStorage;
 
 use SURFnet\OATHBundle\Services\UserStorage\Encryption\Dummy as Dummy;
-use SURFnet\OATHBundle\Services\UserStorage\Encryption\Openssl as Mcrypt;
 
 /**
  * Class PDO storage
@@ -42,6 +41,7 @@ class PDO extends UserStorageAbstract
     public function init()
     {
         $this->handle = new \PDO($this->options['dsn'], $this->options['username'], $this->options['password']);
+        $this->handle->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->tablename = $this->options["table"];
 
         if (isset($this->options['encryption']) && isset($this->options['encryption']['type'])) {

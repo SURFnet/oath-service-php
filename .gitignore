@@ -9,12 +9,15 @@
 /vendor/
 /bin/
 
-# other
+#other
 .idea/*
 .buildpath
 .project
 .settings
 .DS_Store
 
-# Docker
+#docker
 .env
+
+#phpunit
+.phpunit.result.cache

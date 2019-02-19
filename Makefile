@@ -17,7 +17,10 @@ composer:
 tests: test-phpmd test-phpcs
 
 test-phpmd:
-	${COMMAND} run --rm php bin/phpmd src text phpmd.xml --exclude */Tests/*
+	${COMMAND} run --rm php bin/phpmd src text config/phpmd.xml --exclude */Tests/*
 
 test-phpcs:
-	${COMMAND} run --rm php bin/phpcs --report=full --standard=phpcs.xml --warning-severity=0 --extensions=php src
+	${COMMAND} run --rm php bin/phpcs --report=full --standard=config/phpcs.xml --warning-severity=0 --extensions=php src
+
+test-phpunit:
+	${COMMAND} run --rm php bin/phpunit -c config/phpunit.xml --coverage-text

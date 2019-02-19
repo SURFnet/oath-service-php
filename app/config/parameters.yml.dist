@@ -9,10 +9,10 @@ parameters:
     surfnet_oath.userstorage:
         type: pdo
         options:
-          dsn: mysql:host=localhost;dbname=oathservice
+          dsn: mysql:host=database;dbname=oathservice
           username: root
           password: secret
-          table: storage
+          table: secret
           encryption:
             type: openssl
             options:
