@@ -40,20 +40,20 @@ class OCRA extends AbstractOath
      * This method generates an OCRA HOTP value for the given
      * set of parameters.
      *
-     * @param ocraSuite    the OCRA Suite
-     * @param key          the shared secret, HEX encoded
-     * @param counter      the counter that changes
+     * @param $ocraSuite    string the OCRA Suite
+     * @param $key          string the shared secret, HEX encoded
+     * @param $counter      int the counter that changes
      *                     on a per use basis,
      *                     HEX encoded
-     * @param question     the challenge question, HEX encoded
-     * @param password     a password that can be used,
+     * @param $question     string the challenge question, HEX encoded
+     * @param $password     string a password that can be used,
      *                     HEX encoded
-     * @param sessionInformation
+     * @param $sessionInformation string
      *                     Static information that identifies the
      *                     current session, Hex encoded
-     * @param timeStamp    a value that reflects a time
+     * @param $timeStamp    inta value that reflects a time
      *
-     * @return A numeric String in base 10 that includes
+     * @return string A numeric String in base 10 that includes
      * {@link truncationDigits} digits
      */
     public function generateOCRA($ocraSuite,

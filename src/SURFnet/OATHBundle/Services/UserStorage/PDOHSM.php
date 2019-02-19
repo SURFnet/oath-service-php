@@ -12,6 +12,9 @@ use SURFnet\OATHBundle\Services\HSM\YubiHSM;
 
 class PDOHSM extends PDO {
 
+    /**
+     * @var YubiHSM
+     */
     private $hsm;
 
     // Protect the secret in AEAD

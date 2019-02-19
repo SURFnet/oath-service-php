@@ -19,7 +19,7 @@ class PDO extends UserStorageAbstract
 {
     /**
      * The PDO handle for database queries
-     * @var null|Pdo
+     * @var null|\PDO
      */
     protected $handle = null;
 

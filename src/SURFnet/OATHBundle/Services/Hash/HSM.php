@@ -5,6 +5,9 @@ use SURFnet\OATHBundle\Services\HSM\YubiHSM;
 
 class HSM implements HashInterface {
 
+    /**
+     * @var YubiHSM
+     */
     private $hsm;
 
     public function sha1Hmac($data, $key) {
