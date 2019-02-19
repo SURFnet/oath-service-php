@@ -24,6 +24,7 @@ services:
     volumes:
       - ../:/var/www
       - ../docker/phpfpm/dev.ini:/usr/local/etc/php/conf.d/app.ini
+      - ~/.composer:/.composer
     working_dir: /var/www
     user: '${UID}:${GID}'
     environment:
