@@ -1,13 +1,16 @@
 #symfony2
 /web/bundles/
 /var/bootstrap.php.cache
+/var/SymfonyRequirements.php
 /var/cache/*
 /app/config/parameters.yml
 /var/logs/*
 !var/cache/.gitkeep
 !var/logs/.gitkeep
 /vendor/
-/bin/
+/bin/*
+!/bin/console
+
 
 #other
 .idea/*

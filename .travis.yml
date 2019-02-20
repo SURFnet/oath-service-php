@@ -10,6 +10,18 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 
+before_script:
+  - sudo service mysql stop
+
 script:
   - make install
   - make tests
+
+branches:
+  only:
+    - develop
+    - master
+
+cache:
+  directories:
+    - ~/.composer/cache/files
