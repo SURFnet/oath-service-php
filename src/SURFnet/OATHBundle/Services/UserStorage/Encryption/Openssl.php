@@ -32,7 +32,7 @@ class Openssl implements UserEncryptionInterface
         }
         $this->key = $config['key'];
     }
-    
+
     /**
      * Encrypts the given data.
      *
@@ -53,11 +53,11 @@ class Openssl implements UserEncryptionInterface
             $iv
         );
 
-        return $iv . $ciphertext;
+        return base64_encode($ciphertext . '::' . $iv);
     }
-    
+
     /**
-      * Decrypts the given data.
+     * Decrypts the given data.
      *
      * @param string $data Data to decrypt.
      *
@@ -65,9 +65,7 @@ class Openssl implements UserEncryptionInterface
      */
     public function decrypt($data)
     {
-        $ivsize = openssl_cipher_iv_length($this->method);
-        $iv = mb_substr($data, 0, $ivsize, '8bit');
-        $ciphertext = mb_substr($data, $ivsize, null, '8bit');
+        list($ciphertext, $iv) = explode('::', base64_decode($data), 2);
 
         return openssl_decrypt(
             $ciphertext,
