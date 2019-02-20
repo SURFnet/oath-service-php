@@ -32,7 +32,7 @@ class OCRA extends AbstractOath
      *
      * @return String a string with raw bytes
      */
-    private function _hexStr2Bytes($hex)
+    private function hexStr2Bytes($hex)
     {
         return pack("H*", $hex);
     }
@@ -57,6 +57,10 @@ class OCRA extends AbstractOath
      *
      * @return string A numeric String in base 10 that includes
      * {@link truncationDigits} digits
+     *
+     * @SuppressWarnings(PMD.CyclomaticComplexity)
+     * @SuppressWarnings(PMD.NPathComplexity)
+     * @SuppressWarnings(PMD.ExcessiveMethodLength)
      */
     public function generateOCRA(
         $ocraSuite,
@@ -192,12 +196,12 @@ class OCRA extends AbstractOath
         }
         
         // Delimiter
-        $msg[strlen($ocraSuite)] = $this->_hexStr2Bytes("0");
+        $msg[strlen($ocraSuite)] = $this->hexStr2Bytes("0");
 
         // Put the bytes of "Counter" to the message
         // Input is HEX encoded
         if ($counterLength > 0) {
-            $bArray = self::_hexStr2Bytes($counter);
+            $bArray = self::hexStr2Bytes($counter);
             for ($i=0; $i<strlen($bArray); $i++) {
                 $msg [$i + $ocraSuiteLength + 1] = $bArray[$i];
             }
@@ -207,7 +211,7 @@ class OCRA extends AbstractOath
         // Put the bytes of "question" to the message
         // Input is text encoded
         if ($questionLength > 0) {
-            $bArray = $this->_hexStr2Bytes($question);
+            $bArray = $this->hexStr2Bytes($question);
             for ($i=0; $i<strlen($bArray); $i++) {
                 $msg [$i + $ocraSuiteLength + 1 + $counterLength] = $bArray[$i];
             }
@@ -216,7 +220,7 @@ class OCRA extends AbstractOath
         // Put the bytes of "password" to the message
         // Input is HEX encoded
         if ($passwordLength > 0) {
-            $bArray = $this->_hexStr2Bytes($password);
+            $bArray = $this->hexStr2Bytes($password);
             for ($i=0; $i<strlen($bArray); $i++) {
                 $msg [$i + $ocraSuiteLength + 1 + $counterLength + $questionLength] = $bArray[$i];
             }
@@ -225,7 +229,7 @@ class OCRA extends AbstractOath
         // Put the bytes of "sessionInformation" to the message
         // Input is text encoded
         if ($sessionInformationLength > 0) {
-            $bArray = $this->_hexStr2Bytes($sessionInformation);
+            $bArray = $this->hexStr2Bytes($sessionInformation);
             for ($i=0; $i<strlen($bArray); $i++) {
                 $msg [$i + $ocraSuiteLength + 1 + $counterLength + $questionLength + $passwordLength] = $bArray[$i];
             }
@@ -234,7 +238,7 @@ class OCRA extends AbstractOath
         // Put the bytes of "time" to the message
         // Input is text value of minutes
         if ($timeStampLength > 0) {
-            $bArray = $this->_hexStr2Bytes($timeStamp);
+            $bArray = $this->hexStr2Bytes($timeStamp);
             for ($i=0; $i<strlen($bArray); $i++) {
                 $msg [$i + $ocraSuiteLength + 1 + $counterLength + $questionLength + $passwordLength + $sessionInformationLength] = $bArray[$i];
             }
@@ -248,11 +252,11 @@ class OCRA extends AbstractOath
             }
             $hash = $this->getHash()->sha1Hmac($msg, $key);
         } else {
-            $byteKey = $this->_hexStr2Bytes($key);
+            $byteKey = $this->hexStr2Bytes($key);
             $hash = hash_hmac($crypto, $msg, $byteKey);
         }
 
-        $result = $this->_oathTruncate($hash, $codeDigits);
+        $result = $this->oathTruncate($hash, $codeDigits);
              
         return $result;
     }
@@ -260,21 +264,21 @@ class OCRA extends AbstractOath
     /**
      * Truncate a result to a certain length
      */
-    private function _oathTruncate($hash, $length = 6)
+    private function oathTruncate($hash, $length = 6)
     {
         // Convert to dec
         foreach (str_split($hash, 2) as $hex) {
-            $hmac_result[]=hexdec($hex);
+            $hmacResult[]=hexdec($hex);
         }
     
         // Find offset
-        $offset = $hmac_result[count($hmac_result) - 1] & 0xf;
+        $offset = $hmacResult[count($hmacResult) - 1] & 0xf;
     
         $v = strval(
-            (($hmac_result[$offset+0] & 0x7f) << 24 ) |
-            (($hmac_result[$offset+1] & 0xff) << 16 ) |
-            (($hmac_result[$offset+2] & 0xff) << 8 ) |
-            ($hmac_result[$offset+3] & 0xff)
+            (($hmacResult[$offset+0] & 0x7f) << 24 ) |
+            (($hmacResult[$offset+1] & 0xff) << 16 ) |
+            (($hmacResult[$offset+2] & 0xff) << 8 ) |
+            ($hmacResult[$offset+3] & 0xff)
         );
         
         $v = substr($v, strlen($v) - $length);

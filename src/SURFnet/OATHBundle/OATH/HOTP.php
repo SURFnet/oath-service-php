@@ -15,8 +15,8 @@ class HOTP extends AbstractOath
      */
     public function calculateResponse($secret, $counter, $length = 6)
     {
-        $hash = $this->_getHash($secret, $counter);
-        return $this->_truncate($hash, $length);
+        $hash = $this->generateHash($secret, $counter);
+        return $this->truncate($hash, $length);
     }
     
     /**
@@ -27,23 +27,23 @@ class HOTP extends AbstractOath
      *
      * @return string hash
      */
-    protected function _getHash($secret, $counter)
+    protected function generateHash($secret, $counter)
     {
          // Counter
          //the counter value can be more than one byte long, so we need to go multiple times
-         $cur_counter = array(0,0,0,0,0,0,0,0);
+         $curCounter = array(0,0,0,0,0,0,0,0);
         for ($i=7; $i>=0; $i--) {
-            $cur_counter[$i] = pack('C*', $counter);
+            $curCounter[$i] = pack('C*', $counter);
             $counter = $counter >> 8;
         }
-         $bin_counter = implode($cur_counter);
+         $binCounter = implode($curCounter);
          // Pad to 8 chars
-        if (strlen($bin_counter) < 8) {
-            $bin_counter = str_repeat(chr(0), 8 - strlen($bin_counter)) . $bin_counter;
+        if (strlen($binCounter) < 8) {
+            $binCounter = str_repeat(chr(0), 8 - strlen($binCounter)) . $binCounter;
         }
      
          // HMAC
-         $hash = $this->getHash()->sha1Hmac($bin_counter, $secret);
+         $hash = $this->getHash()->sha1Hmac($binCounter, $secret);
          return $hash;
     }
  
@@ -55,23 +55,23 @@ class HOTP extends AbstractOath
      *
      * @return string a truncated response
      */
-    protected function _truncate($hash, $length = 6)
+    protected function truncate($hash, $length = 6)
     {
          // Convert to dec
         foreach (str_split($hash, 2) as $hex) {
-            $hmac_result[]=hexdec($hex);
+            $hmacResult[]=hexdec($hex);
         }
      
          // Find offset
-         $offset = $hmac_result[19] & 0xf;
+         $offset = $hmacResult[19] & 0xf;
      
          // Algorithm from RFC
          return
          (
-             (($hmac_result[$offset+0] & 0x7f) << 24 ) |
-             (($hmac_result[$offset+1] & 0xff) << 16 ) |
-             (($hmac_result[$offset+2] & 0xff) << 8 ) |
-             ($hmac_result[$offset+3] & 0xff)
+             (($hmacResult[$offset+0] & 0x7f) << 24 ) |
+             (($hmacResult[$offset+1] & 0xff) << 16 ) |
+             (($hmacResult[$offset+2] & 0xff) << 8 ) |
+             ($hmacResult[$offset+3] & 0xff)
          ) % pow(10, $length);
     }
 }

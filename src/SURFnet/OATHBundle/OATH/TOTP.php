@@ -21,7 +21,7 @@ class TOTP extends HOTP
         }
         $counter = intval($timestamp / $window);
 
-        $hash = $this->_getHash($secret, $counter);
-        return $this->_truncate($hash, $length);
+        $hash = $this->generateHash($secret, $counter);
+        return $this->truncate($hash, $length);
     }
 }

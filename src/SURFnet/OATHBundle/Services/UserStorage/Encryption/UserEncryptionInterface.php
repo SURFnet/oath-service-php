@@ -4,7 +4,7 @@ namespace SURFnet\OATHBundle\Services\UserStorage\Encryption;
 
 /**
  * Interface for encrypting/decrypting the user secret.
- * 
+ *
  * @author peter
  */
 interface UserEncryptionInterface
@@ -17,7 +17,7 @@ interface UserEncryptionInterface
     public function __construct($config);
     
     /**
-     * Encrypts the given data. 
+     * Encrypts the given data.
      *
      * @param String $data Data to encrypt.
      *

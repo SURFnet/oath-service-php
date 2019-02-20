@@ -1,47 +1,54 @@
-<?php 
+<?php
 
 namespace SURFnet\OATHBundle\Services\UserStorage\Encryption;
 
 /**
  * Class for encrypting/decrypting the user secret with openssl.
- * 
+ *
  * @author peter
  */
 class Openssl implements UserEncryptionInterface
 {
-    private $_method;
-    private $_key;
+    /**
+     * @var string
+     */
+    private $method;
+    /**
+     * @var string
+     */
+    private $key;
 
     /**
      * Construct an encryption instance.
      *
-     * @param $config The configuration that a specific configuration class may use.
+     * @param $config array The configuration that a specific configuration class may use.
+     * @throws \Exception
      */
     public function __construct($config)
     {
-        $this->_method = $config['method'];
+        $this->method = $config['method'];
         if (mb_strlen($config['key'], '8bit') !== 32) {
-            throw new Exception("Needs a 256-bit key!");
+            throw new \Exception("Needs a 256-bit key!");
         }
-        $this->_key = $config['key'];
+        $this->key = $config['key'];
     }
     
     /**
-     * Encrypts the given data. 
+     * Encrypts the given data.
      *
-     * @param String $data Data to encrypt.
+     * @param string $data Data to encrypt.
      *
-     * @return encrypted data
+     * @return string encrypted data
      */
     public function encrypt($data)
     {
-        $ivsize = openssl_cipher_iv_length($this->_method);
+        $ivsize = openssl_cipher_iv_length($this->method);
         $iv = openssl_random_pseudo_bytes($ivsize);
 
         $ciphertext = openssl_encrypt(
             $data,
-            $this->_method,
-            $this->_key,
+            $this->method,
+            $this->key,
             OPENSSL_RAW_DATA,
             $iv
         );
@@ -52,20 +59,20 @@ class Openssl implements UserEncryptionInterface
     /**
       * Decrypts the given data.
      *
-     * @param String $data Data to decrypt.
+     * @param string $data Data to decrypt.
      *
-     * @return decrypted data
+     * @return string decrypted data
      */
     public function decrypt($data)
     {
-        $ivsize = openssl_cipher_iv_length($this->_method);
+        $ivsize = openssl_cipher_iv_length($this->method);
         $iv = mb_substr($data, 0, $ivsize, '8bit');
         $ciphertext = mb_substr($data, $ivsize, null, '8bit');
 
         return openssl_decrypt(
             $ciphertext,
-            $this->_method,
-            $this->_key,
+            $this->method,
+            $this->key,
             OPENSSL_RAW_DATA,
             $iv
         );

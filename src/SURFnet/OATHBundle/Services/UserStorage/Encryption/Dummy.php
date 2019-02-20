@@ -4,7 +4,7 @@ namespace SURFnet\OATHBundle\Services\UserStorage\Encryption;
 
 /**
  * Dummy encryption class, returns the data as is.
- * 
+ *
  * @author peter
  */
 class Dummy implements UserEncryptionInterface
@@ -19,7 +19,7 @@ class Dummy implements UserEncryptionInterface
     }
     
     /**
-     * Encrypts the given data. 
+     * Encrypts the given data.
      *
      * @param String $data Data to encrypt.
      *
