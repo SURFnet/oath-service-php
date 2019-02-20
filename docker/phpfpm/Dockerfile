@@ -11,7 +11,6 @@ FROM php:5.6-fpm AS base
 
 RUN apt-get update \
     && apt-get install -y git libicu-dev \
-    && docker-php-ext-install -j$(nproc) intl \
     && docker-php-ext-install -j$(nproc) pdo pdo_mysql
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -26,5 +25,5 @@ COPY . /var/www/html
 #
 FROM base as develop
 
-RUN pecl install xdebug-2.4.0
+RUN pecl install xdebug-2.5.5
 RUN docker-php-ext-enable xdebug
