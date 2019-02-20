@@ -26,7 +26,6 @@ class SURFnetOATHExtension extends Extension
         $storage = $container->getParameter('surfnet_oath.userstorage');
 
         switch ($storage ["type"]) {
-
             case 'pdo':
                 $loader->load('pdo.yml');
                 break;

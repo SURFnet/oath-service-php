@@ -27,3 +27,6 @@ test-phpunit:
 
 test-security:
 	${COMMAND} run --rm php bin/security-checker security:check
+
+fix-cs:
+	${COMMAND} run --rm php bin/phpcbf --standard=config/phpcs.xml --extensions=php src

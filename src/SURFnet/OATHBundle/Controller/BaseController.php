@@ -30,6 +30,6 @@ class BaseController extends FOSRestController
      */
     protected function getUserStorage()
     {
-        return $this->get ("surfnet_oath.storage.user");
+        return $this->get("surfnet_oath.storage.user");
     }
 }

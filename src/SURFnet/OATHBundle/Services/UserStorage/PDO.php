@@ -18,12 +18,14 @@ class PDO extends UserStorageAbstract
 {
     /**
      * The PDO handle for database queries
+     *
      * @var null|\PDO
      */
     protected $handle = null;
 
     /**
      * The table name used to store the identifier/secret pairs
+     *
      * @var string
      */
     protected $tablename;

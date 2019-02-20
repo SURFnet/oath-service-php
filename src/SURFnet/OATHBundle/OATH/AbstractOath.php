@@ -3,19 +3,23 @@ namespace SURFnet\OATHBundle\OATH;
 
 use \SURFnet\OATHBundle\Services\Hash\HashInterface;
 
-abstract class AbstractOath {
+abstract class AbstractOath
+{
 
     private $hash;
 
-    public function __construct (HashInterface $hash) {
+    public function __construct(HashInterface $hash)
+    {
         $this->hash = $hash;
     }
 
-    public function setHash (HashInterface $hash) {
+    public function setHash(HashInterface $hash)
+    {
         $this->hash = $hash;
     }
 
-    public function getHash () {
+    public function getHash()
+    {
         return $this->hash;
     }
 }

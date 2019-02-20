@@ -10,16 +10,16 @@ class HOTP extends OATHService
     /**
      * Validate response using the
      *
-     * @param string                $response
-     * @param string                $userId
-     * @param UserStorageAbstract   $userStorage
+     * @param string              $response
+     * @param string              $userId
+     * @param UserStorageAbstract $userStorage
      *
      * @return boolean
      */
     public function validateResponse($response, $userId, UserStorageAbstract $userStorage)
     {
         $user = $userStorage->getSecretInfo($userId);
-        $hotp = new OATH_HOTP($this->getHash ());
+        $hotp = new OATH_HOTP($this->getHash());
         $hotpResponse = $hotp->calculateResponse($user['secret'], $user['counter'], $this->options['length']);
 
         if ($hotpResponse == $response) {
