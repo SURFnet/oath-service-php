@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\PhpUnit\Secrets;
+namespace Tests\Acceptance\Oath;
 
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
 
-class SecretsTest extends TestCase
+class HotpTest extends TestCase
 {
     /**
      * @var Client
@@ -27,22 +27,22 @@ class SecretsTest extends TestCase
     /**
      * @test
      */
-    public function setSecret()
+    public function validateChallenge()
     {
-        $response = $this->http->request('POST', 'secrets/id?secret=secret', [
+        $response = $this->http->request('POST', 'secrets/id?secret=abcdef', [
             'headers' => [
                 'x-oathservice-consumerkey' => 'ThisKeyShouldBeSecret',
             ]
         ]);
-
         $this->assertEquals(204, $response->getStatusCode());
-    }
 
-    /**
-     * @test
-     */
-    public function deleteSecret()
-    {
+        $response = $this->http->request('GET', 'oath/validate/hotp?response=812453&userId=id', [
+            'headers' => [
+                'x-oathservice-consumerkey' => 'ThisKeyShouldBeSecret',
+            ]
+        ]);
+        $this->assertEquals(204, $response->getStatusCode());
+
         $response = $this->http->request('DELETE', 'secrets/id ', [
             'headers' => [
                 'x-oathservice-consumerkey' => 'ThisKeyShouldBeSecret',

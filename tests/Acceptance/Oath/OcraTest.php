@@ -1,13 +1,11 @@
 <?php
 
-namespace Tests\PhpUnit\Secrets;
+namespace Tests\Acceptance\Oath;
 
 use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
-use SURFnet\OATHBundle\OATH\TOTP;
-use SURFnet\OATHBundle\Services\Hash\Soft;
 
-class TotpTest extends TestCase
+class OcraTest extends TestCase
 {
     /**
      * @var Client
@@ -29,6 +27,21 @@ class TotpTest extends TestCase
     /**
      * @test
      */
+    public function getChallenge()
+    {
+        $response = $this->http->request('GET', 'oath/challenge/ocra', [
+            'headers' => [
+                'x-oathservice-consumerkey' => 'ThisKeyShouldBeSecret',
+            ]
+        ]);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertRegExp("/^\"[a-zA-Z0-9]{10}\"$/", $response->getBody()->getContents());
+    }
+
+    /**
+     * @test
+     */
     public function validateChallenge()
     {
         $response = $this->http->request('POST', 'secrets/id?secret=abcdef', [
@@ -38,10 +51,7 @@ class TotpTest extends TestCase
         ]);
         $this->assertEquals(204, $response->getStatusCode());
 
-        $totp = new TOTP(new Soft());
-        $totpResponse = $totp->calculateResponse('abcdef', 120, 6);
-
-        $response = $this->http->request('GET', 'oath/validate/totp?response='.$totpResponse.'&userId=id', [
+        $response = $this->http->request('GET', 'oath/validate/ocra?challenge=ef46cb0560&response=682120&userId=id&sessionKey=3A4A', [
             'headers' => [
                 'x-oathservice-consumerkey' => 'ThisKeyShouldBeSecret',
             ]
