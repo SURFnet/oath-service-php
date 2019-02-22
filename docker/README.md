@@ -25,3 +25,11 @@ In order to use composer you could use for example:
     ./docker/composer.sh install
 
 
+## Configuration
+
+During `make install` the make step `make set-env` will be executed. This will make sure that all some settings sepcific
+for your development environment are set. There are some options you could overwrite in order to satisfy your needs.    
+
+
+* `WEB_PORT` The exposed webserver port (default 80)
+* `DB_PORT` The exposed database port (default 3306)
