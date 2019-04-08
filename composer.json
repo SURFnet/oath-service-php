@@ -7,20 +7,27 @@
         "psr-0": { "": "src/", "SymfonyStandard": "app/" }
     },
     "require": {
-        "php": ">=5.3.3",
-        "symfony/symfony": "2.5.*",
+        "php": ">=5.6",
+        "symfony/symfony": "3.4.*",
         "twig/extensions": "~1.0",
         "symfony/assetic-bundle": "~2.3",
         "symfony/monolog-bundle": "~2.4",
-        "sensio/distribution-bundle": "~3.0",
+        "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "~3.0",
         "incenteev/composer-parameter-handler": "~2.0",
         "nelmio/api-doc-bundle": "@stable",
         "friendsofsymfony/rest-bundle": "@stable",
-        "jms/serializer-bundle": "@stable"
+        "jms/serializer-bundle": "@stable",
+        "ext-pdo": "*",
+        "ext-openssl": "*",
+        "ext-json": "*"
     },
     "require-dev": {
-        "sensio/generator-bundle": "~2.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "phpmd/phpmd": "^2.6",
+        "phpunit/phpunit": "^5.7",
+        "sensio/generator-bundle": "^3.0",
+        "squizlabs/php_codesniffer": "^3.4"
     },
     "scripts": {
         "post-root-package-install": [
@@ -44,11 +51,16 @@
         ]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "optimize-autoloader": true,
+        "sort-packages": true
     },
     "extra": {
         "symfony-app-dir": "app",
         "symfony-web-dir": "web",
+        "symfony-var-dir": "var",
+        "symfony-bin-dir": "bin",
+        "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         },

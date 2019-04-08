@@ -1,0 +1,259 @@
+{
+	"info": {
+		"_postman_id": "7bf6183c-4545-49b7-98e6-e0beba527a27",
+		"name": "oath-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST secrets/{identifier}",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-oathservice-consumerkey",
+						"value": "ThisKeyShouldBeSecret",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost/secrets/id?secret=abcdef&XDEBUG_SESSION_START=PHPSTORM",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"secrets",
+						"id"
+					],
+					"query": [
+						{
+							"key": "secret",
+							"value": "abcdef"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE secrets/{identifier}",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-oathservice-consumerkey",
+						"value": "ThisKeyShouldBeSecret",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost/secrets/id?XDEBUG_SESSION_START=PHPSTORM",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"secrets",
+						"id"
+					],
+					"query": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /oath/challenge/ocra",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-oathservice-consumerkey",
+						"value": "ThisKeyShouldBeSecret",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost/oath/challenge/ocra?XDEBUG_SESSION_START=PHPSTORM",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"oath",
+						"challenge",
+						"ocra"
+					],
+					"query": [
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /oath/validate/ocra",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-oathservice-consumerkey",
+						"value": "ThisKeyShouldBeSecret",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost/oath/validate/ocra?challenge=ef46cb0560&response=682120&userId=id&sessionKey=3A4A&XDEBUG_SESSION_START=PHPSTORM",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"oath",
+						"validate",
+						"ocra"
+					],
+					"query": [
+						{
+							"key": "challenge",
+							"value": "ef46cb0560"
+						},
+						{
+							"key": "response",
+							"value": "682120"
+						},
+						{
+							"key": "userId",
+							"value": "id"
+						},
+						{
+							"key": "sessionKey",
+							"value": "3A4A"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /oath/validate/hotp",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-oathservice-consumerkey",
+						"type": "text",
+						"value": "ThisKeyShouldBeSecret"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost/oath/validate/hotp?response=812453&userId=id&XDEBUG_SESSION_START=PHPSTORM",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"oath",
+						"validate",
+						"hotp"
+					],
+					"query": [
+						{
+							"key": "response",
+							"value": "812453"
+						},
+						{
+							"key": "userId",
+							"value": "id"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET /oath/validate/totp",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-oathservice-consumerkey",
+						"type": "text",
+						"value": "ThisKeyShouldBeSecret"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost/oath/validate/totp?response=30741&userId=id&XDEBUG_SESSION_START=PHPSTORM",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"oath",
+						"validate",
+						"totp"
+					],
+					"query": [
+						{
+							"key": "response",
+							"value": "30741"
+						},
+						{
+							"key": "userId",
+							"value": "id"
+						},
+						{
+							"key": "XDEBUG_SESSION_START",
+							"value": "PHPSTORM"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

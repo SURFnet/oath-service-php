@@ -9,15 +9,15 @@ parameters:
     surfnet_oath.userstorage:
         type: pdo
         options:
-          dsn: mysql:host=localhost;dbname=oathservice
+          dsn: mysql:host=database;dbname=oathservice
           username: root
           password: secret
-          table: storage
+          table: secret
           encryption:
             type: openssl
             options:
-                method: #a string containing the cipher method, e.g. aes-256-cbc, see http://php.net/manual/en/function.openssl-get-cipher-methods.php for more info on available cipher methods
-                key: #the encryption key, 256-bit
+              method: aes-256-cbc #a string containing the cipher method, e.g. aes-256-cbc, see http://php.net/manual/en/function.openssl-get-cipher-methods.php for more info on available cipher methods
+              key: 8E6B7F8C1CF22D4BEE823581B85391AF #the encryption key, 256-bit
 
     surfnet_oath.consumerKey: ThisKeyShouldBeSecret
     surfnet_oath.oath.ocra:

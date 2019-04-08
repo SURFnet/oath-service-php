@@ -2,8 +2,8 @@
 
 namespace SURFnet\OATHBundle\Services\UserStorage;
 
-use SURFnet\OATHBundle\Services\UserStorage\Encryption\Dummy as Dummy;
-use SURFnet\OATHBundle\Services\UserStorage\Encryption\Openssl as Mcrypt;
+use SURFnet\OATHBundle\Services\UserStorage\Encryption\Dummy;
+use SURFnet\OATHBundle\Services\UserStorage\Encryption\UserEncryptionInterface;
 
 /**
  * Class PDO storage
@@ -19,12 +19,14 @@ class PDO extends UserStorageAbstract
 {
     /**
      * The PDO handle for database queries
-     * @var null|Pdo
+     *
+     * @var null|\PDO
      */
     protected $handle = null;
 
     /**
      * The table name used to store the identifier/secret pairs
+     *
      * @var string
      */
     protected $tablename;
@@ -42,6 +44,7 @@ class PDO extends UserStorageAbstract
     public function init()
     {
         $this->handle = new \PDO($this->options['dsn'], $this->options['username'], $this->options['password']);
+        $this->handle->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->tablename = $this->options["table"];
 
         if (isset($this->options['encryption']) && isset($this->options['encryption']['type'])) {
@@ -93,6 +96,7 @@ class PDO extends UserStorageAbstract
             $sth->execute(array($identifier));
             $result = $sth->fetch();
             if ($result) {
+                $result['secret'] = $this->encryption->decrypt($result['secret']);
                 return $result;
             }
         } else {

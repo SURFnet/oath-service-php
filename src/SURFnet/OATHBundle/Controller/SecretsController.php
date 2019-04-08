@@ -26,7 +26,7 @@ class SecretsController extends BaseController
      */
     public function postSecretsAction($identifier)
     {
-        $responseCode = 200;
+        $responseCode = 204;
         try {
             $this->verifyConsumerKey();
             $request = $this->get('request_stack')->getCurrentRequest();
@@ -57,7 +57,7 @@ class SecretsController extends BaseController
      */
     public function deleteSecretsAction($identifier)
     {
-        $responseCode = 200;
+        $responseCode = 204;
         try {
             $this->verifyConsumerKey();
             $userStorage = $this->getUserStorage();

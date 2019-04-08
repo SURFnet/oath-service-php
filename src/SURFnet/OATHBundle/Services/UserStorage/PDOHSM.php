@@ -10,19 +10,23 @@ namespace SURFnet\OATHBundle\Services\UserStorage;
 
 use SURFnet\OATHBundle\Services\HSM\YubiHSM;
 
-class PDOHSM extends PDO {
+class PDOHSM extends PDO
+{
 
+    /**
+     * @var YubiHSM
+     */
     private $hsm;
 
     // Protect the secret in AEAD
     public function saveSecret($identifier, $secret)
     {
-        $secret = $this->hsm->initOath ($secret);
+        $secret = $this->hsm->initOath($secret);
         return parent::saveSecret($identifier, $secret);
     }
 
-    public function setYubiHSM (YubiHSM $hsm) {
+    public function setYubiHSM(YubiHSM $hsm)
+    {
         $this->hsm = $hsm;
     }
-
-} 
+}

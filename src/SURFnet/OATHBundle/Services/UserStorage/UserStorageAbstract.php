@@ -7,6 +7,7 @@ abstract class UserStorageAbstract
     /**
      * The options for the OATH. Derived classes can access this
      * to retrieve options configured.
+     *
      * @var array
      */
     protected $options = array();
@@ -33,7 +34,6 @@ abstract class UserStorageAbstract
      */
     public function init()
     {
-
     }
 
     /**

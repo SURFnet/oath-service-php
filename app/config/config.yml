@@ -44,6 +44,7 @@ assetic:
 
 fos_rest:
     view:
+        empty_content: 204
         formats:
             json: true
     routing_loader:

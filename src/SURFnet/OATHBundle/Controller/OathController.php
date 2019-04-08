@@ -162,6 +162,6 @@ class OathController extends BaseController
      */
     protected function getOATHService($type)
     {
-        return $this->get ("surfnet_oath.oath.service.{$type}");
+        return $this->get("surfnet_oath.oath.service.{$type}");
     }
 }
