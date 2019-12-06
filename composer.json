@@ -8,25 +8,25 @@
     },
     "require": {
         "php": ">=5.6",
-        "symfony/symfony": "3.4.*",
-        "twig/extensions": "~1.0",
-        "symfony/assetic-bundle": "~2.3",
-        "symfony/monolog-bundle": "~2.4",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "friendsofsymfony/rest-bundle": "@stable",
+        "incenteev/composer-parameter-handler": "~2.0",
+        "jms/serializer-bundle": "@stable",
+        "nelmio/api-doc-bundle": "@stable",
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "~3.0",
-        "incenteev/composer-parameter-handler": "~2.0",
-        "nelmio/api-doc-bundle": "@stable",
-        "friendsofsymfony/rest-bundle": "@stable",
-        "jms/serializer-bundle": "@stable",
-        "ext-pdo": "*",
-        "ext-openssl": "*",
-        "ext-json": "*"
+        "sensio/generator-bundle": "^3.0",
+        "symfony/assetic-bundle": "~2.3",
+        "symfony/monolog-bundle": "~2.4",
+        "symfony/symfony": "3.4.*",
+        "twig/extensions": "~1.0"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.3",
         "phpmd/phpmd": "^2.6",
         "phpunit/phpunit": "^5.7",
-        "sensio/generator-bundle": "^3.0",
         "squizlabs/php_codesniffer": "^3.4"
     },
     "scripts": {
@@ -53,6 +53,9 @@
     "config": {
         "bin-dir": "bin",
         "optimize-autoloader": true,
+        "platform": {
+            "php": "5.6"
+        },
         "sort-packages": true
     },
     "extra": {
