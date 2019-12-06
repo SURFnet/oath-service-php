@@ -1,5 +1,5 @@
 {
-    "name": "SURFnet/OATH-service-php",
+    "name": "surfnet/oath-service-php",
     "license": "MIT",
     "type": "project",
     "description": "PHP implementation of an OATH service",
