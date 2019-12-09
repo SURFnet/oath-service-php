@@ -4,6 +4,7 @@
     "type": "project",
     "description": "PHP implementation of an OATH service",
     "autoload": {
+        "files": ["app/AppKernel.php"],
         "psr-0": { "": "src/", "SymfonyStandard": "app/" }
     },
     "require": {
