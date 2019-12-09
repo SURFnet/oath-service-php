@@ -34,7 +34,9 @@ class SecretsController extends BaseController
             $data = $userStorage->saveSecret($identifier, $request->get('secret'));
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
-            $responseCode = $e->getCode() ?: 500;
+            error_log($e);
+            $responseCode = 500;
+            //$responseCode = $e->getCode() ?: 500;
         }
         $view = $this->view($data, $responseCode);
         return $this->handleView($view);
@@ -64,7 +66,9 @@ class SecretsController extends BaseController
             $data = $userStorage->deleteSecret($identifier);
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
-            $responseCode = $e->getCode() ?: 500;
+            error_log($e);
+            $responseCode = 500;
+            //$responseCode = $e->getCode() ?: 500;
         }
         $view = $this->view($data, $responseCode);
         return $this->handleView($view);
