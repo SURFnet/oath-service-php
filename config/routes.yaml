@@ -5,3 +5,7 @@ surfnet_oath_secrets:
 surfnet_oath_oath:
     type: rest
     resource: SURFnet\OATHBundle\Controller\OathController
+
+NelmioApiDocBundle:
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+    prefix:   /api/doc

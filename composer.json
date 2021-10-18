@@ -4,72 +4,71 @@
     "type": "project",
     "description": "PHP implementation of an OATH service",
     "autoload": {
-        "files": ["app/AppKernel.php"],
-        "psr-0": { "": "src/", "SymfonyStandard": "app/" }
+        "classmap": [
+            "src/Kernel.php"
+        ],
+        "psr-4": {
+            "": "src/"
+        }
     },
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.2",
         "ext-json": "*",
         "ext-openssl": "*",
         "ext-pdo": "*",
-        "friendsofsymfony/rest-bundle": "@stable",
+        "friendsofsymfony/rest-bundle": "^2.5",
         "incenteev/composer-parameter-handler": "~2.0",
         "jms/serializer-bundle": "@stable",
-        "nelmio/api-doc-bundle": "@stable",
-        "sensio/distribution-bundle": "^5.0",
-        "sensio/framework-extra-bundle": "~3.0",
-        "sensio/generator-bundle": "^3.0",
-        "symfony/assetic-bundle": "~2.3",
-        "symfony/monolog-bundle": "~2.4",
-        "symfony/symfony": "3.4.*",
-        "twig/extensions": "~1.0"
+        "nelmio/api-doc-bundle": "^2.13",
+        "sensio/framework-extra-bundle": "^5.5",
+        "symfony/flex": "^1.16",
+        "symfony/form": "^4.4",
+        "symfony/monolog-bundle": "~3.7",
+        "symfony/security-csrf": "^4.4",
+        "symfony/templating": "^4.4",
+        "symfony/twig-bundle": "4.4.*",
+        "symfony/validator": "^4.4",
+        "symfony/web-profiler-bundle": "^4.4"
     },
     "require-dev": {
         "guzzlehttp/guzzle": "^6.3",
-        "phpmd/phpmd": "^2.6",
-        "phpunit/phpunit": "^5.7",
-        "squizlabs/php_codesniffer": "^3.4"
+        "phpmd/phpmd": "^2.8",
+        "phpunit/phpunit": "^7.5",
+        "squizlabs/php_codesniffer": "^3.6"
+    },
+    "conflict": {
+        "symfony/symfony": "*"
     },
     "scripts": {
-        "post-root-package-install": [
-            "SymfonyStandard\\Composer::hookRootPackageInstall"
+        "symfony-scripts": [
+            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters"
         ],
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
+            "@symfony-scripts"
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::removeSymfonyStandardFiles"
-        ]
+            "@symfony-scripts"
+        ],
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        }
     },
     "config": {
-        "bin-dir": "bin",
         "optimize-autoloader": true,
         "platform": {
-            "php": "5.6"
+            "php": "7.2"
         },
         "sort-packages": true
     },
     "extra": {
-        "symfony-app-dir": "app",
-        "symfony-web-dir": "web",
-        "symfony-var-dir": "var",
-        "symfony-bin-dir": "bin",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+            "file": "config/legacy/parameters.yaml"
         },
-        "branch-alias": {
-            "dev-master": "2.5-dev"
+        "symfony": {
+            "allow-contrib": false,
+            "require": "4.4.*"
         }
     }
 }

@@ -2,28 +2,8 @@
 
 namespace SURFnet\OATHBundle\Services\UserStorage;
 
-abstract class UserStorageAbstract
+interface UserStorageInterface
 {
-    /**
-     * The options for the OATH. Derived classes can access this
-     * to retrieve options configured.
-     *
-     * @var array
-     */
-    protected $options = array();
-
-    /**
-     * Constructor
-     * Should not be called directly, use the factory to construct
-     * a OATH instance of a certain type.
-     *
-     * @param array $options
-     */
-    public function __construct($options = array())
-    {
-        $this->options = $options ['options'];
-    }
-
     /**
      * An initializer that will be called directly after instantiating
      * the class. Derived classes can override this to perform
@@ -32,9 +12,7 @@ abstract class UserStorageAbstract
      * Note: this method is not abstract since not every derived class
      * will want to implement this.
      */
-    public function init()
-    {
-    }
+    public function init();
 
     /**
      * Get the users secret
@@ -43,7 +21,7 @@ abstract class UserStorageAbstract
      *
      * @return string
      */
-    abstract public function getSecret($identifier);
+    public function getSecret($identifier);
 
     /**
      * Get the users secret and counter
@@ -52,7 +30,7 @@ abstract class UserStorageAbstract
      *
      * @return array
      */
-    abstract public function getSecretInfo($identifier);
+    public function getSecretInfo($identifier);
 
     /**
      * Save the secret
@@ -60,19 +38,19 @@ abstract class UserStorageAbstract
      * @param string $identifier
      * @param string $secret
      */
-    abstract public function saveSecret($identifier, $secret);
+    public function saveSecret($identifier, $secret);
 
     /**
      * Update the user's counter (if possible, used for HOTP validation)
      *
      * @param string $identifier
      */
-    abstract public function updateCounter($identifier);
+    public function updateCounter($identifier);
 
     /**
      * Delete the secret
      *
      * @param string $identifier
      */
-    abstract public function deleteSecret($identifier);
+    public function deleteSecret($identifier);
 }

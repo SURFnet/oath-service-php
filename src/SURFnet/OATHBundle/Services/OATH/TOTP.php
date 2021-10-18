@@ -2,21 +2,12 @@
 
 namespace SURFnet\OATHBundle\Services\OATH;
 
-use SURFnet\OATHBundle\Services\UserStorage\UserStorageAbstract;
 use SURFnet\OATHBundle\OATH\TOTP as OATH_TOTP;
+use SURFnet\OATHBundle\Services\UserStorage\UserStorageInterface;
 
 class TOTP extends OATHService
 {
-    /**
-     * Validate response using the
-     *
-     * @param string              $response
-     * @param string              $userId
-     * @param UserStorageAbstract $userStorage
-     *
-     * @return boolean
-     */
-    public function validateResponse($response, $userId, UserStorageAbstract $userStorage)
+    public function validateResponse(string $response, string $userId, UserStorageInterface $userStorage): bool
     {
         $secret = $userStorage->getSecret($userId);
         $totp = new OATH_TOTP($this->getHash());

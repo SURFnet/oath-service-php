@@ -2,8 +2,8 @@
 
 namespace Tests\Acceptance\Secrets;
 
-use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 
 class SecretsTest extends TestCase
 {

@@ -2,6 +2,8 @@
 
 namespace SURFnet\OATHBundle\Services\OATH;
 
+use Exception;
+
 class RandomGenerator
 {
     /**
@@ -31,8 +33,8 @@ class RandomGenerator
         }
 
         if ($fp === null) {
-            if (@file_exists('/dev/urandom')) {
-                $fp = @fopen('/dev/urandom', 'rb');
+            if (file_exists('/dev/urandom')) {
+                $fp = fopen('/dev/urandom', 'rb');
             } else {
                 $fp = false;
             }
@@ -42,13 +44,13 @@ class RandomGenerator
             /* Read random bytes from /dev/urandom. */
             $data = fread($fp, $length);
             if ($data === false) {
-                throw new \Exception('Error reading random data.');
+                throw new Exception('Error reading random data.');
             }
             if (strlen($data) != $length) {
                 if ($fallback) {
                     $data = self::generateRandomBytesMTrand($length);
                 } else {
-                    throw new \Exception(sprintf(
+                    throw new Exception(sprintf(
                         'Did not get requested number of bytes from random source. Requested (%d) got (%d)',
                         $length,
                         strlen($data)

@@ -11,8 +11,8 @@
 
 namespace SURFnet\OATHBundle\OATH;
 
+use Exception;
 use SURFnet\OATHBundle\Services\Hash\HSM;
-use SURFnet\OATHBundle\Services\Hash\Soft;
 
 /**
  * This a PHP port of the example implementation of the
@@ -28,9 +28,9 @@ class OCRA extends AbstractOath
     /**
      * This method converts HEX string to Byte[]
      *
-     * @param String hex   the HEX string
+     * @param string hex   the HEX string
      *
-     * @return String a string with raw bytes
+     * @return string a string with raw bytes
      */
     private function hexStr2Bytes($hex)
     {
@@ -53,7 +53,7 @@ class OCRA extends AbstractOath
      * @param $sessionInformation string
      *                     Static information that identifies the
      *                     current session, Hex encoded
-     * @param $timeStamp    inta value that reflects a time
+     * @param $timeStamp    into value that reflects a time
      *
      * @return string A numeric String in base 10 that includes
      * {@link truncationDigits} digits
@@ -71,9 +71,7 @@ class OCRA extends AbstractOath
         $sessionInformation,
         $timeStamp
     ) {
-        $codeDigits = 0;
         $crypto = "";
-        $result = null;
         $ocraSuiteLength = strlen($ocraSuite);
         $counterLength = 0;
         $questionLength = 0;
@@ -101,7 +99,7 @@ class OCRA extends AbstractOath
                 
         // The size of the byte array message to be encrypted
         // Counter
-        if ($dataInput[0] == "c") {
+        if ($dataInput[0] === "c") {
             // Fix the length of the HEX string
             while (strlen($counter) < 16) {
                 $counter = "0" . $counter;
@@ -109,7 +107,7 @@ class OCRA extends AbstractOath
             $counterLength=8;
         }
         // Question
-        if ($dataInput[0] == "q"
+        if ($dataInput[0] === "q"
             || stripos($dataInput, "-q")!==false
         ) {
             while (strlen($question) < 256) {
@@ -178,7 +176,7 @@ class OCRA extends AbstractOath
         
              
         // TimeStamp
-        if ($dataInput[0] == "t"
+        if ($dataInput[0] === "t"
             || stripos($dataInput, "-t") !== false
         ) {
             while (strlen($timeStamp) < 16) {
@@ -201,7 +199,7 @@ class OCRA extends AbstractOath
         // Put the bytes of "Counter" to the message
         // Input is HEX encoded
         if ($counterLength > 0) {
-            $bArray = self::hexStr2Bytes($counter);
+            $bArray = $this->hexStr2Bytes($counter);
             for ($i=0; $i<strlen($bArray); $i++) {
                 $msg [$i + $ocraSuiteLength + 1] = $bArray[$i];
             }
@@ -247,8 +245,8 @@ class OCRA extends AbstractOath
         $msg = implode("", $msg);
 
         if (($this->getHash() instanceof HSM)) {
-            if ($cryptoFunction != "sha1") {
-                throw new \Exception('Only SHA1 HMAC is supported using YubiHSM', 500);
+            if ($cryptoFunction !== "sha1") {
+                throw new Exception('Only SHA1 HMAC is supported using YubiHSM', 500);
             }
             $hash = $this->getHash()->sha1Hmac($msg, $key);
         } else {
@@ -256,9 +254,7 @@ class OCRA extends AbstractOath
             $hash = hash_hmac($crypto, $msg, $byteKey);
         }
 
-        $result = $this->oathTruncate($hash, $codeDigits);
-             
-        return $result;
+        return $this->oathTruncate($hash, $codeDigits);
     }
 
     /**
@@ -266,6 +262,7 @@ class OCRA extends AbstractOath
      */
     private function oathTruncate($hash, $length = 6)
     {
+        $hmacResult = [];
         // Convert to dec
         foreach (str_split($hash, 2) as $hex) {
             $hmacResult[]=hexdec($hex);

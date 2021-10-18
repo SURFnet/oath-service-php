@@ -1,27 +1,45 @@
-#symfony2
-/web/bundles/
-/var/bootstrap.php.cache
-/var/SymfonyRequirements.php
+# IDE files #
+#############
+.idea
+
+# Web application ignores #
+###########################
+
+/.web-server-pid
+/config/legacy/parameters.yaml
+/var/*
+!/var/cache
 /var/cache/*
-/app/config/parameters.yml
-/var/logs/*
 !var/cache/.gitkeep
+!/var/logs
+/var/logs/*
 !var/logs/.gitkeep
+!/var/sessions
+/var/sessions/*
+!var/sessions/.gitkeep
+!var/SymfonyRequirements.php
 /vendor/
-/bin/*
-!/bin/console
-
-
-#other
-.idea/*
-.buildpath
-.project
-.settings
-.DS_Store
-*~
-
-#docker
 .env
+/docker/.env
 
-#phpunit
-.phpunit.result.cache
+# Code coverage reports #
+#################
+/coverage/*
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> squizlabs/php_codesniffer ###
+/.phpcs-cache
+###< squizlabs/php_codesniffer ###

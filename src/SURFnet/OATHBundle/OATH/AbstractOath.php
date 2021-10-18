@@ -1,7 +1,7 @@
 <?php
 namespace SURFnet\OATHBundle\OATH;
 
-use \SURFnet\OATHBundle\Services\Hash\HashInterface;
+use SURFnet\OATHBundle\Services\Hash\HashInterface;
 
 abstract class AbstractOath
 {

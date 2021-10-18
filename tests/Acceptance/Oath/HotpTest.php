@@ -2,8 +2,8 @@
 
 namespace Tests\Acceptance\Oath;
 
-use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 
 class HotpTest extends TestCase
 {
@@ -34,6 +34,7 @@ class HotpTest extends TestCase
                 'x-oathservice-consumerkey' => 'ThisKeyShouldBeSecret',
             ]
         ]);
+        $contents = $response->getBody()->getContents();
         $this->assertEquals(204, $response->getStatusCode());
 
         $response = $this->http->request('GET', 'oath/validate/hotp?response=812453&userId=id', [

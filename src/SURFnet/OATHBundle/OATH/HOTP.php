@@ -57,6 +57,7 @@ class HOTP extends AbstractOath
      */
     protected function truncate($hash, $length = 6)
     {
+        $hmacResult = [];
          // Convert to dec
         foreach (str_split($hash, 2) as $hex) {
             $hmacResult[]=hexdec($hex);

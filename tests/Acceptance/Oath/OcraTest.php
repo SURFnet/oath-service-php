@@ -2,8 +2,8 @@
 
 namespace Tests\Acceptance\Oath;
 
-use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Client;
+use PHPUnit\Framework\TestCase;
 
 class OcraTest extends TestCase
 {

@@ -1,9 +1,9 @@
 services:
-    # When using PDO as storage
-    surfnet_oath.storage.user:
-      class: SURFnet\OATHBundle\Services\UserStorage\PDO
-      arguments: [%surfnet_oath.userstorage%]
-      calls:
-        - [init]
-    surfnet_oath.hash:
-         class: SURFnet\OATHBundle\Services\Hash\Soft
+  # When using PDO as storage
+  SURFnet\OATHBundle\Services\UserStorage\PDO:
+    arguments: ["%surfnet_oath.userstorage%"]
+    calls:
+     - [init]
+
+  surfnet_oath.hash:
+    class: SURFnet\OATHBundle\Services\Hash\Soft

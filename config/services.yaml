@@ -1,0 +1,40 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+imports:
+  - { resource: 'legacy/parameters.yaml' }
+
+services:
+  # default configuration for services in *this* file
+  _defaults:
+      autowire: true      # Automatically injects dependencies in your services.
+      autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+  SURFnet\OATHBundle\Controller\:
+    resource: '../src/SURFnet/OATHBundle/Controller/'
+    tags: ['controller.service_arguments']
+
+  SURFnet\OATHBundle\Services\OATH\OCRA:
+    arguments: ["%surfnet_oath.oath.ocra%"]
+    calls:
+      - [init]
+      - [setHash, ["@surfnet_oath.hash"]]
+
+  SURFnet\OATHBundle\Services\OATH\HOTP:
+    arguments: ["%surfnet_oath.oath.hotp%"]
+    calls:
+      - [init]
+      - [setHash, ["@surfnet_oath.hash"]]
+
+  SURFnet\OATHBundle\Services\OATH\TOTP:
+    arguments: ["%surfnet_oath.oath.totp%"]
+    calls:
+      - [init]
+      - [setHash, ["@surfnet_oath.hash"]]
+
+  SURFnet\OATHBundle\Controller\BaseController:
+    arguments:
+      $parameterBag: '@parameter_bag'
+      $userStorage: '@SURFnet\OATHBundle\Services\UserStorage\PDO'

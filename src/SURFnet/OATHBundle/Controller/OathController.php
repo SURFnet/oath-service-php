@@ -2,13 +2,16 @@
 
 namespace SURFnet\OATHBundle\Controller;
 
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\Annotations\View;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\HttpFoundation\Request;
 
 class OathController extends BaseController
 {
     /**
      * @Get("/oath/challenge/ocra")
+     * @View()
      * @ApiDoc(
      *  section="OATH",
      *  description="Get an OCRA challenge",
@@ -24,18 +27,17 @@ class OathController extends BaseController
         $responseCode = 200;
         try {
             $this->verifyConsumerKey();
-            $oathservice = $this->getOATHService('ocra');
-            $data = $oathservice->generateChallenge();
+            $data = $this->ocra->generateChallenge();
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
             $responseCode = $e->getCode() ?: 500;
         }
-        $view = $this->view($data, $responseCode);
-        return $this->handleView($view);
+        return $this->view($data, $responseCode);
     }
 
     /**
      * @Get("/oath/validate/ocra")
+     * @View()
      * @ApiDoc(
      *  section="OATH",
      *  description="Validate a OCRA challenge against a response",
@@ -53,21 +55,18 @@ class OathController extends BaseController
      *  },
      * )
      */
-    public function validateOcraChallengeAction()
+    public function validateOcraChallengeAction(Request $request)
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
         $responseCode = 204;
         $data = null;
         try {
             $this->verifyConsumerKey();
-            $oathservice = $this->getOATHService('ocra');
             $secret = null;
             $userId = $request->get('userId');
             if ($userId !== null) {
-                $userStorage = $this->getUserStorage();
-                $secret = $userStorage->getSecret($userId);
+                $secret = $this->userStorage->getSecret($userId);
             }
-            $result = $oathservice->validateResponse($request->get('response'), $request->get('challenge'), $secret, $request->get('sessionKey'));
+            $result = $this->ocra->validateResponse($request->get('response'), $request->get('challenge'), $secret, $request->get('sessionKey'));
             if (!$result) {
                 $responseCode = 400;
             }
@@ -75,12 +74,12 @@ class OathController extends BaseController
             $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString(),);
             $responseCode = $e->getCode() ?: 500;
         }
-        $view = $this->view($data, $responseCode);
-        return $this->handleView($view);
+        return $this->view($data, $responseCode);
     }
 
     /**
      * @Get("/oath/validate/hotp")
+     * @View()
      * @ApiDoc(
      *  section="OATH",
      *  description="Validate a HOTP challenge against a response",
@@ -96,28 +95,26 @@ class OathController extends BaseController
      *  },
      * )
      */
-    public function validateHotpChallengeAction()
+    public function validateHotpChallengeAction(Request $request)
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
         $responseCode = 204;
         $data = null;
         try {
             $this->verifyConsumerKey();
-            $oathservice = $this->getOATHService('hotp');
-            $result = $oathservice->validateResponse($request->get('response'), $request->get('userId'), $this->getUserStorage());
+            $result = $this->hotp->validateResponse((string) $request->get('response'), (string) $request->get('userId'), $this->userStorage);
             if (!$result) {
                 $responseCode = 400;
             }
         } catch (\Exception $e) {
-            $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString(),);
+            $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString());
             $responseCode = $e->getCode() ?: 500;
         }
-        $view = $this->view($data, $responseCode);
-        return $this->handleView($view);
+        return $this->view($data, $responseCode);
     }
 
     /**
      * @Get("/oath/validate/totp")
+     * @View()
      * @ApiDoc(
      *  section="OATH",
      *  description="Validate a TOTP challenge against a response",
@@ -133,15 +130,13 @@ class OathController extends BaseController
      *  },
      * )
      */
-    public function validateTotpChallengeAction()
+    public function validateTotpChallengeAction(Request $request)
     {
-        $request = $this->get('request_stack')->getCurrentRequest();
         $responseCode = 204;
         $data = null;
         try {
             $this->verifyConsumerKey();
-            $oathservice = $this->getOATHService('totp');
-            $result = $oathservice->validateResponse($request->get('response'), $request->get('userId'), $this->getUserStorage());
+            $result = $this->totp->validateResponse($request->get('response'), $request->get('userId'), $this->userStorage);
             if (!$result) {
                 $responseCode = 400;
             }
@@ -149,19 +144,6 @@ class OathController extends BaseController
             $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString(),);
             $responseCode = $e->getCode() ?: 500;
         }
-        $view = $this->view($data, $responseCode);
-        return $this->handleView($view);
-    }
-
-    /**
-     * Create the storage class using the storage factory and return the class
-     *
-     * @param string $type
-     *
-     * @return mixed
-     */
-    protected function getOATHService($type)
-    {
-        return $this->get("surfnet_oath.oath.service.{$type}");
+        return $this->view($data, $responseCode);
     }
 }
