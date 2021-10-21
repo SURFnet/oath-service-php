@@ -41,15 +41,17 @@ In a production environment, it is important to change the defaults. In particul
 
     tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null;echo
 
-At this point you should be able to run the service using the php build-in web server:
+At this point you should be able to run the service using the Symfony build-in web server, note that this is an external dependency that needs [manual installation](https://symfony.com/download):
 
-    php app/console server:run 
+    symfony server:start 
 
 and access the api docs:
 
     curl -I http://0:8000/api/doc/
 
 which should result in a `HTTP 200 OK` message.
+
+For alternative development related options please consult the [development.md](docs/development.md) file.
 
 Install a database
 ------------------

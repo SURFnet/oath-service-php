@@ -2,6 +2,8 @@
 
 namespace SURFnet\OATHBundle\Services\UserStorage\Encryption;
 
+use Exception;
+
 /**
  * Class for encrypting/decrypting the user secret with openssl.
  *
@@ -22,13 +24,13 @@ class Openssl implements UserEncryptionInterface
      * Construct an encryption instance.
      *
      * @param $config array The configuration that a specific configuration class may use.
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct($config)
     {
         $this->method = $config['method'];
         if (mb_strlen($config['key'], '8bit') !== 32) {
-            throw new \Exception("Needs a 256-bit key!");
+            throw new Exception("Needs a 256-bit key!");
         }
         $this->key = $config['key'];
     }

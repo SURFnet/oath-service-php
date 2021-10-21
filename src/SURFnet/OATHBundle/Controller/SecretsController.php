@@ -2,12 +2,13 @@
 
 namespace SURFnet\OATHBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use FOS\RestBundle\Controller\Annotations\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class SecretsController extends BaseController
 {
     /**
+     * @View()
      * @ApiDoc(
      *  section="Secrets",
      *  description="Set or update user's secret",
@@ -27,20 +28,20 @@ class SecretsController extends BaseController
     public function postSecretsAction($identifier)
     {
         $responseCode = 204;
+        $data = null;
         try {
             $this->verifyConsumerKey();
             $request = $this->get('request_stack')->getCurrentRequest();
-            $userStorage = $this->getUserStorage();
-            $data = $userStorage->saveSecret($identifier, $request->get('secret'));
+            $this->userStorage->saveSecret($identifier, $request->get('secret'));
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
             $responseCode = $e->getCode() ?: 500;
         }
-        $view = $this->view($data, $responseCode);
-        return $this->handleView($view);
+        return $this->view($data, $responseCode);
     }
 
     /**
+     * @View()
      * @ApiDoc(
      *  section="Secrets",
      *  description="Delete a specific secret",
@@ -60,13 +61,11 @@ class SecretsController extends BaseController
         $responseCode = 204;
         try {
             $this->verifyConsumerKey();
-            $userStorage = $this->getUserStorage();
-            $data = $userStorage->deleteSecret($identifier);
+            $data = $this->userStorage->deleteSecret($identifier);
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
             $responseCode = $e->getCode() ?: 500;
         }
-        $view = $this->view($data, $responseCode);
-        return $this->handleView($view);
+        return $this->view($data, $responseCode);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace SURFnet\OATHBundle\Services\UserStorage;
 
+use Exception;
+use PDO as BasePDO;
 use SURFnet\OATHBundle\Services\UserStorage\Encryption\Dummy;
 use SURFnet\OATHBundle\Services\UserStorage\Encryption\UserEncryptionInterface;
 
@@ -15,14 +17,14 @@ use SURFnet\OATHBundle\Services\UserStorage\Encryption\UserEncryptionInterface;
  *   PRIMARY KEY (`identifier`)
  * ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
  */
-class PDO extends UserStorageAbstract
+class PDO implements UserStorageInterface
 {
     /**
      * The PDO handle for database queries
      *
-     * @var null|\PDO
+     * @var null|BasePDO
      */
-    protected $handle = null;
+    protected $handle;
 
     /**
      * The table name used to store the identifier/secret pairs
@@ -39,12 +41,26 @@ class PDO extends UserStorageAbstract
     protected $encryption;
 
     /**
+     * The options for the OATH. Derived classes can access this
+     * to retrieve options configured.
+     *
+     * @var array
+     */
+    protected $options = array();
+
+    public function __construct($options = array())
+    {
+        $this->options = $options ['options'];
+    }
+
+    /**
      * Initialize pdo handle
      */
     public function init()
     {
-        $this->handle = new \PDO($this->options['dsn'], $this->options['username'], $this->options['password']);
-        $this->handle->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->handle = new BasePDO($this->options['dsn'], $this->options['username'], $this->options['password']);
+
+        $this->handle->setAttribute(BasePDO::ATTR_ERRMODE, BasePDO::ERRMODE_EXCEPTION);
         $this->tablename = $this->options["table"];
 
         if (isset($this->options['encryption']) && isset($this->options['encryption']['type'])) {
@@ -63,7 +79,7 @@ class PDO extends UserStorageAbstract
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getSecret($identifier)
     {
@@ -75,7 +91,7 @@ class PDO extends UserStorageAbstract
                 return $result;
             }
         } else {
-            throw new \Exception('identifier_not_found', 404);
+            throw new Exception('identifier_not_found', 404);
         }
         return null;
     }
@@ -87,7 +103,7 @@ class PDO extends UserStorageAbstract
      *
      * @return array
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function getSecretInfo($identifier)
     {
@@ -97,10 +113,11 @@ class PDO extends UserStorageAbstract
             $result = $sth->fetch();
             if ($result) {
                 $result['secret'] = $this->encryption->decrypt($result['secret']);
+
                 return $result;
             }
         } else {
-            throw new \Exception('identifier_not_found', 404);
+            throw new Exception('identifier_not_found', 404);
         }
         return null;
     }
@@ -126,7 +143,7 @@ class PDO extends UserStorageAbstract
      *
      * @param string $identifier
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function updateCounter($identifier)
     {
@@ -134,7 +151,7 @@ class PDO extends UserStorageAbstract
             $sth = $this->handle->prepare("UPDATE ".$this->tablename." SET `counter` = counter + 1 WHERE `identifier` = ?");
             $sth->execute(array($identifier));
         } else {
-            throw new \Exception('identifier_not_found', 404);
+            throw new Exception('identifier_not_found', 404);
         }
     }
 
@@ -143,7 +160,7 @@ class PDO extends UserStorageAbstract
      *
      * @param string $identifier
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function deleteSecret($identifier)
     {
@@ -151,18 +168,16 @@ class PDO extends UserStorageAbstract
             $sth = $this->handle->prepare("DELETE FROM ".$this->tablename." WHERE `identifier` = ?");
             $sth->execute(array($identifier));
         } else {
-            throw new \Exception('identifier_not_found', 404);
+            throw new Exception('identifier_not_found', 404);
         }
     }
 
     /**
      * Does the identifier exists in the database
      *
-     * @param string $identifier
-     *
      * @return mixed
      */
-    private function identifierExists($identifier)
+    private function identifierExists(string $identifier)
     {
         $sth = $this->handle->prepare("SELECT `identifier` FROM ".$this->tablename." WHERE `identifier` = ?");
         $sth->execute(array($identifier));

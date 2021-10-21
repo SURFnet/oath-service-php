@@ -1,0 +1,12 @@
+fos_rest:
+  view:
+    empty_content: 204
+    view_response_listener: true
+    formats:
+      json: true
+    templating_formats:
+      json: false
+      html: false
+  routing_loader:
+    default_format: json
+    include_format: false

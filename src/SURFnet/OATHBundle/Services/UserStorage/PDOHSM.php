@@ -22,7 +22,7 @@ class PDOHSM extends PDO
     public function saveSecret($identifier, $secret)
     {
         $secret = $this->hsm->initOath($secret);
-        return parent::saveSecret($identifier, $secret);
+        parent::saveSecret($identifier, $secret);
     }
 
     public function setYubiHSM(YubiHSM $hsm)

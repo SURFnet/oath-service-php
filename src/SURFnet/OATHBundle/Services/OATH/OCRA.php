@@ -2,7 +2,7 @@
 
 namespace SURFnet\OATHBundle\Services\OATH;
 
-use SURFnet\OATHBundle\Services\OATH\RandomGenerator;
+use Exception;
 use SURFnet\OATHBundle\OATH\OCRA as OATH_OCRA;
 
 /**
@@ -56,7 +56,7 @@ class OCRA extends OATHService
     private function parseOCRASuite($ocraSuite)
     {
         if (!is_string($ocraSuite)) {
-            throw new \Exception('OCRASuite not in string format: ' . var_export($ocraSuite, true));
+            throw new Exception('OCRASuite not in string format: ' . var_export($ocraSuite, true));
         }
 
         $ocraSuite = strtoupper($ocraSuite);
@@ -64,54 +64,54 @@ class OCRA extends OATHService
 
         $s = explode(':', $ocraSuite);
         if (count($s) != 3) {
-            throw new \Exception('Invalid OCRASuite format: ' . var_export($ocraSuite, true));
+            throw new Exception('Invalid OCRASuite format: ' . var_export($ocraSuite, true));
         }
 
         $algo = explode('-', $s[0]);
         if (count($algo) != 2) {
-            throw new \Exception('Invalid OCRA version: ' . var_export($s[0], true));
+            throw new Exception('Invalid OCRA version: ' . var_export($s[0], true));
         }
 
         if ($algo[0] !== 'OCRA') {
-            throw new \Exception('Unsupported OCRA algorithm: ' . var_export($algo[0], true));
+            throw new Exception('Unsupported OCRA algorithm: ' . var_export($algo[0], true));
         }
 
         if ($algo[1] !== '1') {
-            throw new \Exception('Unsupported OCRA version: ' . var_export($algo[1], true));
+            throw new Exception('Unsupported OCRA version: ' . var_export($algo[1], true));
         }
         $this->OCRAVersion = $algo[1];
 
         $cf = explode('-', $s[1]);
         if (count($cf) != 3) {
-            throw new \Exception('Invalid OCRA suite crypto function: ' . var_export($s[1], true));
+            throw new Exception('Invalid OCRA suite crypto function: ' . var_export($s[1], true));
         }
 
         if ($cf[0] !== 'HOTP') {
-            throw new \Exception('Unsupported OCRA suite crypto function: ' . var_export($cf[0], true));
+            throw new Exception('Unsupported OCRA suite crypto function: ' . var_export($cf[0], true));
         }
         $this->CryptoFunctionType = $cf[0];
 
         if (!array_key_exists($cf[1], $this->supportedHashFunctions)) {
-            throw new \Exception('Unsupported hash function in OCRA suite crypto function: ' . var_export($cf[1], true));
+            throw new Exception('Unsupported hash function in OCRA suite crypto function: ' . var_export($cf[1], true));
         }
         $this->CryptoFunctionHash = $cf[1];
         $this->CryptoFunctionHashLength = $this->supportedHashFunctions[$cf[1]];
 
         if (!preg_match('/^\d+$/', $cf[2]) || (($cf[2] < 4 || $cf[2] > 10) && $cf[2] != 0)) {
-            throw new \Exception('Invalid OCRA suite crypto function truncation length: ' . var_export($cf[2], true));
+            throw new Exception('Invalid OCRA suite crypto function truncation length: ' . var_export($cf[2], true));
         }
         $this->CryptoFunctionTruncation = intval($cf[2]);
 
         $di = explode('-', $s[2]);
         if (count($cf) == 0) {
-            throw new \Exception('Invalid OCRA suite data input: ' . var_export($s[2], true));
+            throw new Exception('Invalid OCRA suite data input: ' . var_export($s[2], true));
         }
 
         $dataInput = array();
         foreach ($di as $elem) {
             $letter = $elem[0];
             if (array_key_exists($letter, $dataInput)) {
-                throw new \Exception('Duplicate field in OCRA suite data input: ' . var_export($elem, true));
+                throw new Exception('Duplicate field in OCRA suite data input: ' . var_export($elem, true));
             }
             $dataInput[$letter] = 1;
 
@@ -123,13 +123,13 @@ class OCRA extends OATHService
                 } elseif (preg_match('/^Q([AHN])(\d+)$/', $elem, $match)) {
                     $qLen = intval($match[2]);
                     if ($qLen < 4 || $qLen > 64) {
-                        throw new \Exception('Invalid OCRA suite data input question length: ' . var_export($qLen, true));
+                        throw new Exception('Invalid OCRA suite data input question length: ' . var_export($qLen, true));
                     }
                     $this->Q = true;
                     $this->QType = $match[1];
                     $this->QLength = $qLen;
                 } else {
-                    throw new \Exception('Invalid OCRA suite data input question: ' . var_export($elem, true));
+                    throw new Exception('Invalid OCRA suite data input question: ' . var_export($elem, true));
                 }
             } elseif ($letter === 'P') {
                 if (strlen($elem) == 1) {
@@ -137,7 +137,7 @@ class OCRA extends OATHService
                 } else {
                     $pAlgo = substr($elem, 1);
                     if (!array_key_exists($pAlgo, $this->supportedHashFunctions)) {
-                        throw new \Exception('Unsupported OCRA suite PIN hash function: ' . var_export($elem, true));
+                        throw new Exception('Unsupported OCRA suite PIN hash function: ' . var_export($elem, true));
                     }
                     $this->P = true;
                     $this->PType = $pAlgo;
@@ -149,13 +149,13 @@ class OCRA extends OATHService
                 } elseif (preg_match('/^S(\d+)$/', $elem, $match)) {
                     $sLen = intval($match[1]);
                     if ($sLen <= 0 || $sLen > 512) {
-                        throw new \Exception('Invalid OCRA suite data input session information length: ' . var_export($sLen, true));
+                        throw new Exception('Invalid OCRA suite data input session information length: ' . var_export($sLen, true));
                     }
 
                     $this->S = true;
                     $this->SLength = $sLen;
                 } else {
-                    throw new \Exception('Invalid OCRA suite data input session information length: ' . var_export($elem, true));
+                    throw new Exception('Invalid OCRA suite data input session information length: ' . var_export($elem, true));
                 }
             } elseif ($letter === 'T') {
                 if (strlen($elem) == 1) {
@@ -164,29 +164,30 @@ class OCRA extends OATHService
                     preg_match_all('/(\d+)([HMS])/', $elem, $match);
 
                     if (count($match[1]) !== count(array_unique($match[2]))) {
-                        throw new \Exception('Duplicate definitions in OCRA suite data input timestamp: ' . var_export($elem, true));
+                        throw new Exception('Duplicate definitions in OCRA suite data input timestamp: ' . var_export($elem, true));
                     }
 
                     $length = 0;
-                    for ($i = 0; $i < count($match[1]); $i++) {
+                    $count = count($match[1]);
+                    for ($i = 0; $i < $count; $i++) {
                         $length += intval($match[1][$i]) * $this->TPeriods[$match[2][$i]];
                     }
                     if ($length <= 0) {
-                        throw new \Exception('Invalid OCRA suite data input timestamp: ' . var_export($elem, true));
+                        throw new Exception('Invalid OCRA suite data input timestamp: ' . var_export($elem, true));
                     }
 
                     $this->T = true;
                     $this->TLength = $length;
                 } else {
-                    throw new \Exception('Invalid OCRA suite data input timestamp: ' . var_export($elem, true));
+                    throw new Exception('Invalid OCRA suite data input timestamp: ' . var_export($elem, true));
                 }
             } else {
-                throw new \Exception('Unsupported OCRA suite data input field: ' . var_export($elem, true));
+                throw new Exception('Unsupported OCRA suite data input field: ' . var_export($elem, true));
             }
         }
 
         if (!$this->Q) {
-            throw new \Exception('OCRA suite data input question not defined: ' . var_export($s[2], true));
+            throw new Exception('OCRA suite data input question not defined: ' . var_export($s[2], true));
         }
     }
 
@@ -195,7 +196,7 @@ class OCRA extends OATHService
      *
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateChallenge()
     {
@@ -217,8 +218,7 @@ class OCRA extends OATHService
                 $challenge = implode("", unpack('N*', $bytes));
                 break;
             default:
-                throw new \Exception('Unsupported OCRASuite challenge type: ' . var_export($qType, true));
-                break;
+                throw new Exception('Unsupported OCRASuite challenge type: ' . var_export($qType, true));
         }
 
         $challenge = substr($challenge, 0, $qLength);
@@ -246,7 +246,7 @@ class OCRA extends OATHService
     /**
      * Constant time string comparison, see http://codahale.com/a-lesson-in-timing-attacks/
      */
-    private function constEqual($s1, $s2)
+    private function constEqual(string $s1, string $s2): bool
     {
         if (strlen($s1) != strlen($s2)) {
             return false;
@@ -258,6 +258,6 @@ class OCRA extends OATHService
             $result &= ($s1[$i] == $s2[$i]);
         }
 
-        return (boolean)$result;
+        return $result;
     }
 }
