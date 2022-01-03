@@ -21,6 +21,24 @@
 /vendor/
 .env
 /docker/.env
+.env.test
+/config/packages/cache.yaml
+/config/packages/dev/web_profiler.yaml
+/config/packages/prod/deprecations.yaml
+/config/packages/prod/routing.yaml
+/config/packages/routing.yaml
+/config/packages/test/monolog.yaml
+/config/packages/test/twig.yaml
+/config/packages/test/validator.yaml
+/config/packages/twig.yaml
+/config/packages/validator.yaml
+/config/preload.php
+/config/routes/dev/framework.yaml
+/config/routes/dev/web_profiler.yaml
+/phpunit.xml.dist
+/src/Controller/
+/templates/
+/tests/bootstrap.php
 
 # Code coverage reports #
 #################
