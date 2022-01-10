@@ -30,7 +30,11 @@ class OathController extends BaseController
             $data = $this->ocra->generateChallenge();
         } catch (\Exception $e) {
             $data = array('error' => $e->getMessage());
-            $responseCode = $e->getCode() ?: 500;
+            $responseCode = 500;
+            // only pass error code is it's a valid http status code
+            if ($e->getCode() >= 200 && $e->getCode() <= 510) {
+                $responseCode = $e->getCode() ?: 500;
+            }
         }
         return $this->view($data, $responseCode);
     }
@@ -71,8 +75,12 @@ class OathController extends BaseController
                 $responseCode = 400;
             }
         } catch (\Exception $e) {
-            $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString(),);
-            $responseCode = $e->getCode() ?: 500;
+            $data = array('error' => $e->getMessage());
+            $responseCode = 500;
+            // only pass error code is it's a valid http status code
+            if ($e->getCode() >= 200 && $e->getCode() <= 510) {
+                $responseCode = $e->getCode() ?: 500;
+            }
         }
         return $this->view($data, $responseCode);
     }
@@ -106,8 +114,12 @@ class OathController extends BaseController
                 $responseCode = 400;
             }
         } catch (\Exception $e) {
-            $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString());
-            $responseCode = $e->getCode() ?: 500;
+            $data = array('error' => $e->getMessage());
+            $responseCode = 500;
+            // only pass error code is it's a valid http status code
+            if ($e->getCode() >= 200 && $e->getCode() <= 510) {
+                $responseCode = $e->getCode() ?: 500;
+            }
         }
         return $this->view($data, $responseCode);
     }
@@ -141,8 +153,12 @@ class OathController extends BaseController
                 $responseCode = 400;
             }
         } catch (\Exception $e) {
-            $data = array('error' => $e->getMessage(), 'trace' => $e->getTraceAsString(),);
-            $responseCode = $e->getCode() ?: 500;
+            $data = array('error' => $e->getMessage());
+            $responseCode = 500;
+            // only pass error code is it's a valid http status code
+            if ($e->getCode() >= 200 && $e->getCode() <= 510) {
+                $responseCode = $e->getCode() ?: 500;
+            }
         }
         return $this->view($data, $responseCode);
     }
