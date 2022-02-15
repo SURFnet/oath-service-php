@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/SURFnet/oath-service-php/tree/1.2.0) (2022-01-15)
+
+### Fixes
+
+- Only return valid http-status-codes if an error occures
+- Send logging to syslog
+
 ## [1.1.0](https://github.com/SURFnet/oath-service-php/tree/1.1.0) (2022-01-03)
 
 Upgrade to Symfony 4.4 LTS
