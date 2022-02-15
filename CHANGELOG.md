@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.2.0](https://github.com/SURFnet/oath-service-php/tree/1.2.0) (2022-01-15)
+## [1.2.2](https://github.com/SURFnet/oath-service-php/tree/1.2.0) (2022-01-15)
 
 ### Fixes
 
